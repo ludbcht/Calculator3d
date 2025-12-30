@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur Impression 3D - Prix & Coûts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #00d4ff;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #a0a0a0;
+            font-size: 0.95rem;
+        }
+
+        /* Sélection du mode */
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            padding: 12px 30px;
+            border: 2px solid #00d4ff;
+            background: transparent;
+            color: #00d4ff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .mode-btn.active {
+            background: #00d4ff;
+            color: #1a1a2e;
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card h2 {
+            color: #00d4ff;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Formulaires */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #e4e4e4;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00d4ff;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* Bobines */
+        .bobine-item {
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .bobine-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .bobine-title {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .btn-remove {
+            padding: 6px 12px;
+            background: rgba(255, 59, 59, 0.2);
+            border: 1px solid #ff3b3b;
+            color: #ff3b3b;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-remove:hover {
+            background: rgba(255, 59, 59, 0.4);
+        }
+
+        .btn-add {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px dashed #00d4ff;
+            color: #00d4ff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-add:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        /* Boutons d'action */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary, .btn-secondary, .btn-history {
+            flex: 1;
+            min-width: 150px;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            color: #1a1a2e;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e4e4e4;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-history {
+            background: linear-gradient(135deg, #9d4edd 0%, #7209b7 100%);
+            color: #ffffff;
+        }
+
+        .btn-history:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(157, 78, 221, 0.4);
+        }
+
+        /* Résultats */
+        .results {
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: #b0b0b0;
+        }
+
+        .result-value {
+            font-weight: 600;
+            color: #e4e4e4;
+        }
+
+        .result-total {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .result-total .result-item {
+            border-bottom: none;
+            font-size: 1.2rem;
+        }
+
+        .result-total .result-value {
+            color: #00d4ff;
+            font-size: 1.4rem;
+        }
+
+        /* Mode Pro */
+        .pro-only {
+            display: none;
+        }
+
+        .pro-only.show {
+            display: block;
+        }
+
+        /* Modal Historique */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 1000px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid rgba(157, 78, 221, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(157, 78, 221, 0.3);
+        }
+
+        .modal-header h2 {
+            color: #9d4edd;
+            font-size: 1.8rem;
+        }
+
+        .btn-close {
+            background: rgba(255, 59, 59, 0.2);
+            border: 1px solid #ff3b3b;
+            color: #ff3b3b;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-close:hover {
+            background: rgba(255, 59, 59, 0.4);
+        }
+
+        /* Filtres période */
+        .period-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .period-btn {
+            padding: 8px 20px;
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            color: #9d4edd;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .period-btn:hover {
+            background: rgba(157, 78, 221, 0.2);
+        }
+
+        .period-btn.active {
+            background: #9d4edd;
+            color: #ffffff;
+        }
+
+        /* Statistiques */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-label {
+            color: #b0b0b0;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            color: #9d4edd;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .stat-subvalue {
+            color: #00d4ff;
+            font-size: 1.1rem;
+            margin-top: 5px;
+        }
+
+        /* Liste historique */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .history-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(157, 78, 221, 0.4);
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .history-item-title {
+            color: #00d4ff;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .history-item-date {
+            color: #808080;
+            font-size: 0.85rem;
+        }
+
+        .history-item-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .history-detail {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-detail-label {
+            color: #808080;
+            font-size: 0.8rem;
+            margin-bottom: 3px;
+        }
+
+        .history-detail-value {
+            color: #e4e4e4;
+            font-weight: 600;
+        }
+
+        .history-item-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-delete-entry {
+            padding: 6px 12px;
+            background: rgba(255, 59, 59, 0.2);
+            border: 1px solid #ff3b3b;
+            color: #ff3b3b;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete-entry:hover {
+            background: rgba(255, 59, 59, 0.4);
+        }
+
+        .empty-history {
+            text-align: center;
+            padding: 40px;
+            color: #808080;
+        }
+
+        .empty-history-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        /* Bouton export */
+        .btn-export {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid #00d4ff;
+            color: #00d4ff;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .btn-export:hover {
+            background: rgba(0, 212, 255, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .mode-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-secondary, .btn-history {
+                min-width: 100%;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .modal-header h2 {
+                font-size: 1.4rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .history-item-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+
+        /* Aide visuelle */
+        .help-text {
+            font-size: 0.85rem;
+            color: #808080;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🖨️ Calculateur Impression 3D</h1>
+            <p class="subtitle">Calculez vos coûts et prix de vente en toute simplicité</p>
+        </header>
+
+        <!-- Sélection du mode -->
+        <div class="mode-selector">
+            <button class="mode-btn active" data-mode="occasionnel">👤 Vendeur Occasionnel</button>
+            <button class="mode-btn" data-mode="pro">💼 Mode Professionnel</button>
+        </div>
+
+        <!-- Formulaire principal -->
+        <div class="card">
+            <h2>📦 Informations de la pièce</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="piece-nom">Nom de la pièce</label>
+                    <input type="text" id="piece-nom" placeholder="Ex: Porte-clés personnalisé">
+                </div>
+                <div class="form-group">
+                    <label for="piece-quantite">Quantité</label>
+                    <input type="number" id="piece-quantite" value="1" min="1">
+                </div>
+            </div>
+        </div>
+
+        <!-- Bobines -->
+        <div class="card">
+            <h2>🎨 Filaments utilisés</h2>
+            <div style="margin-bottom: 20px;">
+                <button class="btn-add" onclick="ajouterBobine()" style="margin-top: 0;">+ Ajouter une bobine</button>
+                <button class="btn-add" onclick="ouvrirGestionBobines()" style="background: rgba(157, 78, 221, 0.1); border-color: #9d4edd; color: #9d4edd; margin-top: 10px;">
+                    📚 Gérer mes bobines enregistrées
+                </button>
+            </div>
+            <div id="bobines-container"></div>
+        </div>
+
+        <!-- Électricité -->
+        <div class="card">
+            <h2>⚡ Consommation électrique</h2>
+            <div style="margin-bottom: 20px;">
+                <button class="btn-add" onclick="ouvrirGestionImprimantes()" style="background: rgba(157, 78, 221, 0.1); border-color: #9d4edd; color: #9d4edd; margin-top: 0;">
+                    🖨️ Gérer mes imprimantes
+                </button>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="imprimante-select">Imprimante 3D</label>
+                    <select id="imprimante-select" onchange="chargerImprimante()">
+                        <option value="">Sélectionner une imprimante...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="elec-kwh">Prix du kWh (€)</label>
+                    <input type="number" id="elec-kwh" step="0.001" value="0.25">
+                    <div class="help-text">Tarif moyen en France : 0,25€</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="elec-puissance">Puissance imprimante (W)</label>
+                    <input type="number" id="elec-puissance" value="150">
+                    <div class="help-text">Puissance moyenne : 100-200W</div>
+                </div>
+                <div class="form-group">
+                    <label for="elec-temps">Temps d'impression (heures)</label>
+                    <input type="number" id="elec-temps" step="0.1" value="5">
+                </div>
+            </div>
+        </div>
+
+        <!-- Paramètres Mode Occasionnel -->
+        <div class="card occasionnel-only">
+            <h2>💰 Paramètres de vente</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="marge-simple">Marge bénéficiaire (%)</label>
+                    <input type="number" id="marge-simple" value="30" min="0">
+                    <div class="help-text">Recommandé : 20-40%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paramètres Mode Pro -->
+        <div class="card pro-only">
+            <h2>🏭 Amortissement de la machine</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="machine-prix">Prix de la machine (€)</label>
+                    <input type="number" id="machine-prix" value="500">
+                </div>
+                <div class="form-group">
+                    <label for="machine-duree">Durée d'amortissement (années)</label>
+                    <input type="number" id="machine-duree" value="3" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="machine-heures">Heures d'utilisation annuelles</label>
+                    <input type="number" id="machine-heures" value="1000">
+                </div>
+            </div>
+        </div>
+
+        <div class="card pro-only">
+            <h2>👨‍🔧 Main-d'œuvre</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="mo-taux">Taux horaire (€/h)</label>
+                    <input type="number" id="mo-taux" step="0.5" value="15">
+                </div>
+                <div class="form-group">
+                    <label for="mo-temps">Temps de travail (heures)</label>
+                    <input type="number" id="mo-temps" step="0.1" value="0.5">
+                    <div class="help-text">Préparation, finitions, emballage</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card pro-only">
+            <h2>📊 TVA et charges</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="tva">TVA (%)</label>
+                    <input type="number" id="tva" value="20" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="charges">Autres charges (%)</label>
+                    <input type="number" id="charges" value="10" min="0">
+                    <div class="help-text">Frais généraux, marketing, etc.</div>
+                </div>
+                <div class="form-group">
+                    <label for="marge-nette">Marge nette (%)</label>
+                    <input type="number" id="marge-nette" value="25" min="0">
+                </div>
+            </div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="action-buttons">
+            <button class="btn-primary" onclick="calculer()">🧮 Calculer</button>
+            <button class="btn-history" onclick="ouvrirHistorique()">📊 Historique</button>
+            <button class="btn-secondary" onclick="reinitialiser()">🔄 Réinitialiser</button>
+        </div>
+
+        <!-- Résultats -->
+        <div class="card results" id="resultats">
+            <h2>📈 Résultats</h2>
+            <div id="details-calculs"></div>
+            <div style="margin-top: 20px;">
+                <button class="btn-primary" onclick="sauvegarderDansHistorique()" style="width: 100%;">
+                    💾 Enregistrer dans l'historique
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Historique -->
+    <div class="modal" id="modal-historique">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📊 Historique de Production</h2>
+                <button class="btn-close" onclick="fermerHistorique()">✕ Fermer</button>
+            </div>
+
+            <div>
+                <button class="btn-export" onclick="exporterHistorique()">📥 Exporter en CSV</button>
+                <button class="btn-export" onclick="effacerHistorique()" style="background: rgba(255, 59, 59, 0.2); border-color: #ff3b3b; color: #ff3b3b;">
+                    🗑️ Effacer l'historique
+                </button>
+            </div>
+
+            <!-- Filtres de période -->
+            <div class="period-filters">
+                <button class="period-btn active" onclick="filtrerPeriode('tout')">Tout</button>
+                <button class="period-btn" onclick="filtrerPeriode('jour')">Aujourd'hui</button>
+                <button class="period-btn" onclick="filtrerPeriode('semaine')">Cette semaine</button>
+                <button class="period-btn" onclick="filtrerPeriode('mois')">Ce mois</button>
+                <button class="period-btn" onclick="filtrerPeriode('annee')">Cette année</button>
+            </div>
+
+            <!-- Statistiques -->
+            <div class="stats-grid" id="stats-container">
+                <!-- Rempli dynamiquement -->
+            </div>
+
+            <!-- Liste historique -->
+            <div class="history-list" id="history-list">
+                <!-- Rempli dynamiquement -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Gestion Bobines -->
+    <div class="modal" id="modal-bobines">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📚 Gestion des Bobines</h2>
+                <button class="btn-close" onclick="fermerGestionBobines()">✕ Fermer</button>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #00d4ff; margin-bottom: 15px;">Ajouter une nouvelle bobine</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nom / Référence</label>
+                        <input type="text" id="nouvelle-bobine-nom" placeholder="Ex: PLA Bleu Eryone">
+                    </div>
+                    <div class="form-group">
+                        <label>Prix (€)</label>
+                        <input type="number" id="nouvelle-bobine-prix" step="0.01" value="20">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Poids total (g)</label>
+                        <input type="number" id="nouvelle-bobine-poids" value="1000">
+                    </div>
+                    <div class="form-group">
+                        <label>Type de filament</label>
+                        <select id="nouvelle-bobine-type">
+                            <option value="PLA">PLA</option>
+                            <option value="ABS">ABS</option>
+                            <option value="PETG">PETG</option>
+                            <option value="TPU">TPU</option>
+                            <option value="Nylon">Nylon</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="ajouterBobineBibliotheque()" style="width: 100%; margin-top: 10px;">
+                    ➕ Ajouter à la bibliothèque
+                </button>
+            </div>
+
+            <hr style="border: 1px solid rgba(255, 255, 255, 0.1); margin: 30px 0;">
+
+            <h3 style="color: #00d4ff; margin-bottom: 15px;">Mes bobines enregistrées</h3>
+            <div id="liste-bobines-enregistrees"></div>
+        </div>
+    </div>
+
+    <!-- Modal Gestion Imprimantes -->
+    <div class="modal" id="modal-imprimantes">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🖨️ Gestion des Imprimantes</h2>
+                <button class="btn-close" onclick="fermerGestionImprimantes()">✕ Fermer</button>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #00d4ff; margin-bottom: 15px;">Ajouter une nouvelle imprimante</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nom / Modèle</label>
+                        <input type="text" id="nouvelle-imprimante-nom" placeholder="Ex: Anycubic Cobra S1 Combo">
+                    </div>
+                    <div class="form-group">
+                        <label>Puissance (W)</label>
+                        <input type="number" id="nouvelle-imprimante-puissance" value="150">
+                        <div class="help-text">Puissance de chauffe + moteurs</div>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="ajouterImprimanteBibliotheque()" style="width: 100%; margin-top: 10px;">
+                    ➕ Ajouter à la bibliothèque
+                </button>
+            </div>
+
+            <hr style="border: 1px solid rgba(255, 255, 255, 0.1); margin: 30px 0;">
+
+            <h3 style="color: #00d4ff; margin-bottom: 15px;">Mes imprimantes enregistrées</h3>
+            <div id="liste-imprimantes-enregistrees"></div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let modeActuel = 'occasionnel';
+        let bobineCounter = 0;
+        let periodeActuelle = 'tout';
+        let derniersResultats = null;
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            chargerDonnees();
+            ajouterBobine();
+            chargerListeImprimantes();
+            initialiserImprimantesParDefaut();
+        });
+
+        // Gestion du mode
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.dataset.mode;
+                changerMode(mode);
+            });
+        });
+
+        function changerMode(mode) {
+            modeActuel = mode;
+            
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+
+            document.querySelectorAll('.pro-only').forEach(el => {
+                el.classList.toggle('show', mode === 'pro');
+            });
+            document.querySelectorAll('.occasionnel-only').forEach(el => {
+                el.style.display = mode === 'occasionnel' ? 'block' : 'none';
+            });
+
+            localStorage.setItem('mode', mode);
+            document.getElementById('resultats').classList.remove('show');
+        }
+
+        // Gestion des bobines
+        function ajouterBobine() {
+            bobineCounter++;
+            const container = document.getElementById('bobines-container');
+            const bobineHTML = `
+                <div class="bobine-item" data-bobine="${bobineCounter}">
+                    <div class="bobine-header">
+                        <span class="bobine-title">Bobine ${bobineCounter}</span>
+                        <button class="btn-remove" onclick="supprimerBobine(${bobineCounter})">✕ Supprimer</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Sélectionner une bobine ou créer</label>
+                            <select data-field="bobine-select" onchange="chargerBobineSelectionnee(this, ${bobineCounter})">
+                                <option value="">Nouvelle bobine...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Nom / Référence</label>
+                            <input type="text" data-field="nom" placeholder="Ex: PLA Bleu Eryone">
+                        </div>
+                        <div class="form-group">
+                            <label>Prix bobine (€)</label>
+                            <input type="number" data-field="prix" step="0.01" value="20">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Poids total bobine (g)</label>
+                            <input type="number" data-field="poids-total" value="1000">
+                        </div>
+                        <div class="form-group">
+                            <label>Poids utilisé (g)</label>
+                            <input type="number" data-field="poids-utilise" value="50">
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', bobineHTML);
+            
+            // Charger la liste des bobines dans le select
+            const select = container.querySelector(`[data-bobine="${bobineCounter}"] select`);
+            chargerListeBobines(select);
+            
+            sauvegarderDonnees();
+        }
+
+        function chargerListeBobines(selectElement) {
+            const bobines = JSON.parse(localStorage.getItem('bobinesBibliotheque') || '[]');
+            
+            // Vider et reconstruire les options
+            selectElement.innerHTML = '<option value="">Nouvelle bobine...</option>';
+            
+            bobines.forEach((bobine, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `${bobine.nom} - ${bobine.prix}€ (${bobine.poids}g) - ${bobine.type}`;
+                selectElement.appendChild(option);
+            });
+        }
+
+        function chargerBobineSelectionnee(selectElement, bobineId) {
+            const index = selectElement.value;
+            if (index === '') return;
+            
+            const bobines = JSON.parse(localStorage.getItem('bobinesBibliotheque') || '[]');
+            const bobine = bobines[index];
+            
+            const container = document.querySelector(`[data-bobine="${bobineId}"]`);
+            container.querySelector('[data-field="nom"]').value = bobine.nom;
+            container.querySelector('[data-field="prix"]').value = bobine.prix;
+            container.querySelector('[data-field="poids-total"]').value = bobine.poids;
+        }
+
+        function supprimerBobine(id) {
+            const bobines = document.querySelectorAll('.bobine-item');
+            if (bobines.length > 1) {
+                document.querySelector(`[data-bobine="${id}"]`).remove();
+                sauvegarderDonnees();
+            } else {
+                alert('Vous devez conserver au moins une bobine.');
+            }
+        }
+
+        // Gestion bibliothèque de bobines
+        function ouvrirGestionBobines() {
+            document.getElementById('modal-bobines').classList.add('show');
+            afficherBobinesEnregistrees();
+        }
+
+        function fermerGestionBobines() {
+            document.getElementById('modal-bobines').classList.remove('show');
+        }
+
+        function ajouterBobineBibliotheque() {
+            const nom = document.getElementById('nouvelle-bobine-nom').value.trim();
+            const prix = parseFloat(document.getElementById('nouvelle-bobine-prix').value);
+            const poids = parseFloat(document.getElementById('nouvelle-bobine-poids').value);
+            const type = document.getElementById('nouvelle-bobine-type').value;
+
+            if (!nom) {
+                alert('Veuillez entrer un nom pour la bobine.');
+                return;
+            }
+
+            const bobines = JSON.parse(localStorage.getItem('bobinesBibliotheque') || '[]');
+            bobines.push({ nom, prix, poids, type });
+            localStorage.setItem('bobinesBibliotheque', JSON.stringify(bobines));
+
+            // Réinitialiser le formulaire
+            document.getElementById('nouvelle-bobine-nom').value = '';
+            document.getElementById('nouvelle-bobine-prix').value = '20';
+            document.getElementById('nouvelle-bobine-poids').value = '1000';
+            document.getElementById('nouvelle-bobine-type').value = 'PLA';
+
+            afficherBobinesEnregistrees();
+            
+            // Mettre à jour tous les selects de bobines
+            document.querySelectorAll('[data-field="bobine-select"]').forEach(select => {
+                chargerListeBobines(select);
+            });
+        }
+
+        function afficherBobinesEnregistrees() {
+            const bobines = JSON.parse(localStorage.getItem('bobinesBibliotheque') || '[]');
+            const container = document.getElementById('liste-bobines-enregistrees');
+
+            if (bobines.length === 0) {
+                container.innerHTML = '<div class="empty-history"><p style="color: #808080;">Aucune bobine enregistrée</p></div>';
+                return;
+            }
+
+            const html = bobines.map((bobine, index) => `
+                <div class="history-item">
+                    <div class="history-item-header">
+                        <div class="history-item-title">${bobine.nom}</div>
+                        <button class="btn-delete-entry" onclick="supprimerBobineBibliotheque(${index})">🗑️ Supprimer</button>
+                    </div>
+                    <div class="history-item-details">
+                        <div class="history-detail">
+                            <span class="history-detail-label">Type</span>
+                            <span class="history-detail-value">${bobine.type}</span>
+                        </div>
+                        <div class="history-detail">
+                            <span class="history-detail-label">Prix</span>
+                            <span class="history-detail-value">${bobine.prix.toFixed(2)} €</span>
+                        </div>
+                        <div class="history-detail">
+                            <span class="history-detail-label">Poids</span>
+                            <span class="history-detail-value">${bobine.poids} g</span>
+                        </div>
+                        <div class="history-detail">
+                            <span class="history-detail-label">Prix au gramme</span>
+                            <span class="history-detail-value">${(bobine.prix / bobine.poids).toFixed(4)} €/g</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = html;
+        }
+
+        function supprimerBobineBibliotheque(index) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette bobine ?')) {
+                const bobines = JSON.parse(localStorage.getItem('bobinesBibliotheque') || '[]');
+                bobines.splice(index, 1);
+                localStorage.setItem('bobinesBibliotheque', JSON.stringify(bobines));
+                afficherBobinesEnregistrees();
+                
+                // Mettre à jour tous les selects
+                document.querySelectorAll('[data-field="bobine-select"]').forEach(select => {
+                    chargerListeBobines(select);
+                });
+            }
+        }
+
+        // Gestion des imprimantes
+        function initialiserImprimantesParDefaut() {
+            const imprimantes = JSON.parse(localStorage.getItem('imprimantesBibliotheque') || '[]');
+            
+            if (imprimantes.length === 0) {
+                // Ajouter quelques imprimantes par défaut
+                const imprimantesDefaut = [
+                    { nom: 'Anycubic Cobra S1 Combo', puissance: 1500 },
+                    { nom: 'Creality Ender 3 V2', puissance: 360 },
+                    { nom: 'Prusa i3 MK3S+', puissance: 120 },
+                    { nom: 'Bambu Lab X1 Carbon', puissance: 350 },
+                    { nom: 'Artillery Sidewinder X2', puissance: 500 }
+                ];
+                localStorage.setItem('imprimantesBibliotheque', JSON.stringify(imprimantesDefaut));
+            }
+        }
+
+        function chargerListeImprimantes() {
+            const imprimantes = JSON.parse(localStorage.getItem('imprimantesBibliotheque') || '[]');
+            const select = document.getElementById('imprimante-select');
+            
+            select.innerHTML = '<option value="">Sélectionner une imprimante...</option>';
+            
+            imprimantes.forEach((imprimante, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `${imprimante.nom} (${imprimante.puissance}W)`;
+                select.appendChild(option);
+            });
+        }
+
+        function chargerImprimante() {
+            const select = document.getElementById('imprimante-select');
+            const index = select.value;
+            
+            if (index === '') return;
+            
+            const imprimantes = JSON.parse(localStorage.getItem('imprimantesBibliotheque') || '[]');
+            const imprimante = imprimantes[index];
+            
+            document.getElementById('elec-puissance').value = imprimante.puissance;
+        }
+
+        function ouvrirGestionImprimantes() {
+            document.getElementById('modal-imprimantes').classList.add('show');
+            afficherImprimantesEnregistrees();
+        }
+
+        function fermerGestionImprimantes() {
+            document.getElementById('modal-imprimantes').classList.remove('show');
+        }
+
+        function ajouterImprimanteBibliotheque() {
+            const nom = document.getElementById('nouvelle-imprimante-nom').value.trim();
+            const puissance = parseFloat(document.getElementById('nouvelle-imprimante-puissance').value);
+
+            if (!nom) {
+                alert('Veuillez entrer un nom pour l\'imprimante.');
+                return;
+            }
+
+            const imprimantes = JSON.parse(localStorage.getItem('imprimantesBibliotheque') || '[]');
+            imprimantes.push({ nom, puissance });
+            localStorage.setItem('imprimantesBibliotheque', JSON.stringify(imprimantes));
+
+            // Réinitialiser le formulaire
+            document.getElementById('nouvelle-imprimante-nom').value = '';
+            document.getElementById('nouvelle-imprimante-puissance').value = '150';
+
+            afficherImprimantesEnregistrees();
+            chargerListeImprimantes();
+        }
+
+        function afficherImprimantesEnregistrees() {
+            const imprimantes = JSON.parse(localStorage.getItem('imprimantesBibliotheque') || '[]');
+            const container = document.getElementById('liste-imprimantes-enregistrees');
+
+            if (imprimantes.length === 0) {
+                container.innerHTML = '<div class="empty-history"><p style="color: #808080;">Aucune imprimante enregistrée</p></div>';
+                return;
+            }
+
+            const html = imprimantes.map((imprimante, index) => `
+                <div class="history-item">
+                    <div class="history-item-header">
+                        <div class="history-item-title">${imprimante.nom}</div>
+                        <button class="btn-delete-entry" onclick="supprimerImprimanteBibliotheque(${index})">🗑️ Supprimer</button>
+                    </div>
+                    <div class="history-item-details">
+                        <div class="history-detail">
+                            <span class="history-detail-label">Puissance</span>
+                            <span class="history-detail-value">${imprimante.puissance} W</span>
+                        </div>
+                        <div class="history-detail">
+                            <span class="history-detail-label">Consommation/h (0,25€/kWh)</span>
+                            <span class="history-detail-value">${((imprimante.puissance / 1000) * 0.25).toFixed(3)} €</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = html;
+        }
+
+        function supprimerImprimanteBibliotheque(index) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette imprimante ?')) {
+                const imprimantes = JSON.parse(localStorage.getItem('imprimantesBibliotheque') || '[]');
+                imprimantes.splice(index, 1);
+                localStorage.setItem('imprimantesBibliotheque', JSON.stringify(imprimantes));
+                afficherImprimantesEnregistrees();
+                chargerListeImprimantes();
+            }
+        }
+
+        // Calculs
+        function calculer() {
+            const quantite = parseFloat(document.getElementById('piece-quantite').value) || 1;
+            
+            let coutMatiere = 0;
+            document.querySelectorAll('.bobine-item').forEach(bobine => {
+                const prix = parseFloat(bobine.querySelector('[data-field="prix"]').value) || 0;
+                const poidsTotal = parseFloat(bobine.querySelector('[data-field="poids-total"]').value) || 1;
+                const poidsUtilise = parseFloat(bobine.querySelector('[data-field="poids-utilise"]').value) || 0;
+                coutMatiere += (prix / poidsTotal) * poidsUtilise;
+            });
+
+            const prixKwh = parseFloat(document.getElementById('elec-kwh').value) || 0;
+            const puissance = parseFloat(document.getElementById('elec-puissance').value) || 0;
+            const temps = parseFloat(document.getElementById('elec-temps').value) || 0;
+            const coutElec = (puissance / 1000) * temps * prixKwh;
+
+            let html = '';
+            let prixVente = 0;
+            let coutTotal = 0;
+
+            if (modeActuel === 'occasionnel') {
+                coutTotal = (coutMatiere + coutElec) * quantite;
+                const marge = parseFloat(document.getElementById('marge-simple').value) || 0;
+                prixVente = coutTotal * (1 + marge / 100);
+                prixVente = Math.ceil(prixVente * 2) / 2;
+
+                derniersResultats = {
+                    mode: 'occasionnel',
+                    nom: document.getElementById('piece-nom').value || 'Pièce sans nom',
+                    quantite: quantite,
+                    coutMatiere: coutMatiere,
+                    coutElec: coutElec,
+                    coutTotal: coutTotal,
+                    prixVente: prixVente,
+                    date: new Date().toISOString()
+                };
+
+                html = `
+                    <div class="result-item">
+                        <span class="result-label">Coût matière (filament)</span>
+                        <span class="result-value">${coutMatiere.toFixed(2)} €</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Coût électrique</span>
+                        <span class="result-value">${coutElec.toFixed(2)} €</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Coût unitaire</span>
+                        <span class="result-value">${(coutMatiere + coutElec).toFixed(2)} €</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Quantité</span>
+                        <span class="result-value">× ${quantite}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Coût total</span>
+                        <span class="result-value">${coutTotal.toFixed(2)} €</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Marge appliquée</span>
+                        <span class="result-value">${parseFloat(document.getElementById('marge-simple').value) || 0}%</span>
+                    </div>
+                    <div class="result-total">
+                        <div class="result-item">
+                            <span class="result-label">💰 Prix de vente conseillé</span>
+                            <span class="result-value">${prixVente.toFixed(2)} €</span>
+                        </div>
+                    </div>
+                `;
