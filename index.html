@@ -186,7 +186,7 @@
             flex-wrap: wrap;
         }
 
-        .btn-primary, .btn-secondary, .btn-history {
+        .btn-primary, .btn-secondary {
             flex: 1;
             min-width: 150px;
             padding: 14px 25px;
@@ -216,16 +216,6 @@
 
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.15);
-        }
-
-        .btn-history {
-            background: linear-gradient(135deg, #9d4edd 0%, #7209b7 100%);
-            color: #ffffff;
-        }
-
-        .btn-history:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(157, 78, 221, 0.4);
         }
 
         /* Résultats */
@@ -283,241 +273,6 @@
             display: block;
         }
 
-        /* Modal Historique */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 1000;
-            overflow-y: auto;
-            padding: 20px;
-        }
-
-        .modal.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 1000px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 2px solid rgba(157, 78, 221, 0.5);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid rgba(157, 78, 221, 0.3);
-        }
-
-        .modal-header h2 {
-            color: #9d4edd;
-            font-size: 1.8rem;
-        }
-
-        .btn-close {
-            background: rgba(255, 59, 59, 0.2);
-            border: 1px solid #ff3b3b;
-            color: #ff3b3b;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-close:hover {
-            background: rgba(255, 59, 59, 0.4);
-        }
-
-        /* Filtres période */
-        .period-filters {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .period-btn {
-            padding: 8px 20px;
-            background: rgba(157, 78, 221, 0.1);
-            border: 1px solid rgba(157, 78, 221, 0.3);
-            color: #9d4edd;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .period-btn:hover {
-            background: rgba(157, 78, 221, 0.2);
-        }
-
-        .period-btn.active {
-            background: #9d4edd;
-            color: #ffffff;
-        }
-
-        /* Statistiques */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: rgba(157, 78, 221, 0.1);
-            border: 1px solid rgba(157, 78, 221, 0.3);
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .stat-label {
-            color: #b0b0b0;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-        }
-
-        .stat-value {
-            color: #9d4edd;
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
-
-        .stat-subvalue {
-            color: #00d4ff;
-            font-size: 1.1rem;
-            margin-top: 5px;
-        }
-
-        /* Liste historique */
-        .history-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .history-item {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .history-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(157, 78, 221, 0.4);
-        }
-
-        .history-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .history-item-title {
-            color: #00d4ff;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .history-item-date {
-            color: #808080;
-            font-size: 0.85rem;
-        }
-
-        .history-item-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .history-detail {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .history-detail-label {
-            color: #808080;
-            font-size: 0.8rem;
-            margin-bottom: 3px;
-        }
-
-        .history-detail-value {
-            color: #e4e4e4;
-            font-weight: 600;
-        }
-
-        .history-item-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .btn-delete-entry {
-            padding: 6px 12px;
-            background: rgba(255, 59, 59, 0.2);
-            border: 1px solid #ff3b3b;
-            color: #ff3b3b;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-delete-entry:hover {
-            background: rgba(255, 59, 59, 0.4);
-        }
-
-        .empty-history {
-            text-align: center;
-            padding: 40px;
-            color: #808080;
-        }
-
-        .empty-history-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
-
-        /* Bouton export */
-        .btn-export {
-            background: rgba(0, 212, 255, 0.2);
-            border: 1px solid #00d4ff;
-            color: #00d4ff;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
-        }
-
-        .btn-export:hover {
-            background: rgba(0, 212, 255, 0.3);
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             h1 {
@@ -537,26 +292,8 @@
                 flex-direction: column;
             }
 
-            .btn-primary, .btn-secondary, .btn-history {
+            .btn-primary, .btn-secondary {
                 min-width: 100%;
-            }
-
-            .modal-content {
-                padding: 20px;
-            }
-
-            .modal-header h2 {
-                font-size: 1.4rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .history-item-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
             }
         }
 
@@ -599,37 +336,19 @@
         <!-- Bobines -->
         <div class="card">
             <h2>🎨 Filaments utilisés</h2>
-            <div style="margin-bottom: 20px;">
-                <button class="btn-add" onclick="ajouterBobine()" style="margin-top: 0;">+ Ajouter une bobine</button>
-                <button class="btn-add" onclick="ouvrirGestionBobines()" style="background: rgba(157, 78, 221, 0.1); border-color: #9d4edd; color: #9d4edd; margin-top: 10px;">
-                    📚 Gérer mes bobines enregistrées
-                </button>
-            </div>
             <div id="bobines-container"></div>
+            <button class="btn-add" onclick="ajouterBobine()">+ Ajouter une bobine</button>
         </div>
 
         <!-- Électricité -->
         <div class="card">
             <h2>⚡ Consommation électrique</h2>
-            <div style="margin-bottom: 20px;">
-                <button class="btn-add" onclick="ouvrirGestionImprimantes()" style="background: rgba(157, 78, 221, 0.1); border-color: #9d4edd; color: #9d4edd; margin-top: 0;">
-                    🖨️ Gérer mes imprimantes
-                </button>
-            </div>
             <div class="form-row">
-                <div class="form-group">
-                    <label for="imprimante-select">Imprimante 3D</label>
-                    <select id="imprimante-select" onchange="chargerImprimante()">
-                        <option value="">Sélectionner une imprimante...</option>
-                    </select>
-                </div>
                 <div class="form-group">
                     <label for="elec-kwh">Prix du kWh (€)</label>
                     <input type="number" id="elec-kwh" step="0.001" value="0.25">
                     <div class="help-text">Tarif moyen en France : 0,25€</div>
                 </div>
-            </div>
-            <div class="form-row">
                 <div class="form-group">
                     <label for="elec-puissance">Puissance imprimante (W)</label>
                     <input type="number" id="elec-puissance" value="150">
@@ -710,7 +429,6 @@
         <!-- Boutons d'action -->
         <div class="action-buttons">
             <button class="btn-primary" onclick="calculer()">🧮 Calculer</button>
-            <button class="btn-history" onclick="ouvrirHistorique()">📊 Historique</button>
             <button class="btn-secondary" onclick="reinitialiser()">🔄 Réinitialiser</button>
         </div>
 
@@ -718,129 +436,6 @@
         <div class="card results" id="resultats">
             <h2>📈 Résultats</h2>
             <div id="details-calculs"></div>
-            <div style="margin-top: 20px;">
-                <button class="btn-primary" onclick="sauvegarderDansHistorique()" style="width: 100%;">
-                    💾 Enregistrer dans l'historique
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Historique -->
-    <div class="modal" id="modal-historique">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>📊 Historique de Production</h2>
-                <button class="btn-close" onclick="fermerHistorique()">✕ Fermer</button>
-            </div>
-
-            <div>
-                <button class="btn-export" onclick="exporterHistorique()">📥 Exporter en CSV</button>
-                <button class="btn-export" onclick="effacerHistorique()" style="background: rgba(255, 59, 59, 0.2); border-color: #ff3b3b; color: #ff3b3b;">
-                    🗑️ Effacer l'historique
-                </button>
-            </div>
-
-            <!-- Filtres de période -->
-            <div class="period-filters">
-                <button class="period-btn active" onclick="filtrerPeriode('tout')">Tout</button>
-                <button class="period-btn" onclick="filtrerPeriode('jour')">Aujourd'hui</button>
-                <button class="period-btn" onclick="filtrerPeriode('semaine')">Cette semaine</button>
-                <button class="period-btn" onclick="filtrerPeriode('mois')">Ce mois</button>
-                <button class="period-btn" onclick="filtrerPeriode('annee')">Cette année</button>
-            </div>
-
-            <!-- Statistiques -->
-            <div class="stats-grid" id="stats-container">
-                <!-- Rempli dynamiquement -->
-            </div>
-
-            <!-- Liste historique -->
-            <div class="history-list" id="history-list">
-                <!-- Rempli dynamiquement -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Gestion Bobines -->
-    <div class="modal" id="modal-bobines">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>📚 Gestion des Bobines</h2>
-                <button class="btn-close" onclick="fermerGestionBobines()">✕ Fermer</button>
-            </div>
-
-            <div style="margin-bottom: 25px;">
-                <h3 style="color: #00d4ff; margin-bottom: 15px;">Ajouter une nouvelle bobine</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Nom / Référence</label>
-                        <input type="text" id="nouvelle-bobine-nom" placeholder="Ex: PLA Bleu Eryone">
-                    </div>
-                    <div class="form-group">
-                        <label>Prix (€)</label>
-                        <input type="number" id="nouvelle-bobine-prix" step="0.01" value="20">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Poids total (g)</label>
-                        <input type="number" id="nouvelle-bobine-poids" value="1000">
-                    </div>
-                    <div class="form-group">
-                        <label>Type de filament</label>
-                        <select id="nouvelle-bobine-type">
-                            <option value="PLA">PLA</option>
-                            <option value="ABS">ABS</option>
-                            <option value="PETG">PETG</option>
-                            <option value="TPU">TPU</option>
-                            <option value="Nylon">Nylon</option>
-                            <option value="Autre">Autre</option>
-                        </select>
-                    </div>
-                </div>
-                <button class="btn-primary" onclick="ajouterBobineBibliotheque()" style="width: 100%; margin-top: 10px;">
-                    ➕ Ajouter à la bibliothèque
-                </button>
-            </div>
-
-            <hr style="border: 1px solid rgba(255, 255, 255, 0.1); margin: 30px 0;">
-
-            <h3 style="color: #00d4ff; margin-bottom: 15px;">Mes bobines enregistrées</h3>
-            <div id="liste-bobines-enregistrees"></div>
-        </div>
-    </div>
-
-    <!-- Modal Gestion Imprimantes -->
-    <div class="modal" id="modal-imprimantes">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>🖨️ Gestion des Imprimantes</h2>
-                <button class="btn-close" onclick="fermerGestionImprimantes()">✕ Fermer</button>
-            </div>
-
-            <div style="margin-bottom: 25px;">
-                <h3 style="color: #00d4ff; margin-bottom: 15px;">Ajouter une nouvelle imprimante</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Nom / Modèle</label>
-                        <input type="text" id="nouvelle-imprimante-nom" placeholder="Ex: Anycubic Cobra S1 Combo">
-                    </div>
-                    <div class="form-group">
-                        <label>Puissance (W)</label>
-                        <input type="number" id="nouvelle-imprimante-puissance" value="150">
-                        <div class="help-text">Puissance de chauffe + moteurs</div>
-                    </div>
-                </div>
-                <button class="btn-primary" onclick="ajouterImprimanteBibliotheque()" style="width: 100%; margin-top: 10px;">
-                    ➕ Ajouter à la bibliothèque
-                </button>
-            </div>
-
-            <hr style="border: 1px solid rgba(255, 255, 255, 0.1); margin: 30px 0;">
-
-            <h3 style="color: #00d4ff; margin-bottom: 15px;">Mes imprimantes enregistrées</h3>
-            <div id="liste-imprimantes-enregistrees"></div>
         </div>
     </div>
 
@@ -848,15 +443,11 @@
         // Variables globales
         let modeActuel = 'occasionnel';
         let bobineCounter = 0;
-        let periodeActuelle = 'tout';
-        let derniersResultats = null;
 
         // Initialisation
         document.addEventListener('DOMContentLoaded', () => {
             chargerDonnees();
-            ajouterBobine();
-            chargerListeImprimantes();
-            initialiserImprimantesParDefaut();
+            ajouterBobine(); // Ajouter une bobine par défaut
         });
 
         // Gestion du mode
@@ -870,10 +461,12 @@
         function changerMode(mode) {
             modeActuel = mode;
             
+            // Mise à jour des boutons
             document.querySelectorAll('.mode-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.mode === mode);
             });
 
+            // Affichage conditionnel
             document.querySelectorAll('.pro-only').forEach(el => {
                 el.classList.toggle('show', mode === 'pro');
             });
@@ -881,7 +474,10 @@
                 el.style.display = mode === 'occasionnel' ? 'block' : 'none';
             });
 
+            // Sauvegarder
             localStorage.setItem('mode', mode);
+            
+            // Masquer les résultats
             document.getElementById('resultats').classList.remove('show');
         }
 
@@ -896,12 +492,6 @@
                         <button class="btn-remove" onclick="supprimerBobine(${bobineCounter})">✕ Supprimer</button>
                     </div>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Sélectionner une bobine ou créer</label>
-                            <select data-field="bobine-select" onchange="chargerBobineSelectionnee(this, ${bobineCounter})">
-                                <option value="">Nouvelle bobine...</option>
-                            </select>
-                        </div>
                         <div class="form-group">
                             <label>Nom / Référence</label>
                             <input type="text" data-field="nom" placeholder="Ex: PLA Bleu Eryone">
@@ -924,39 +514,7 @@
                 </div>
             `;
             container.insertAdjacentHTML('beforeend', bobineHTML);
-            
-            // Charger la liste des bobines dans le select
-            const select = container.querySelector(`[data-bobine="${bobineCounter}"] select`);
-            chargerListeBobines(select);
-            
             sauvegarderDonnees();
-        }
-
-        function chargerListeBobines(selectElement) {
-            const bobines = JSON.parse(localStorage.getItem('bobinesBibliotheque') || '[]');
-            
-            // Vider et reconstruire les options
-            selectElement.innerHTML = '<option value="">Nouvelle bobine...</option>';
-            
-            bobines.forEach((bobine, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = `${bobine.nom} - ${bobine.prix}€ (${bobine.poids}g) - ${bobine.type}`;
-                selectElement.appendChild(option);
-            });
-        }
-
-        function chargerBobineSelectionnee(selectElement, bobineId) {
-            const index = selectElement.value;
-            if (index === '') return;
-            
-            const bobines = JSON.parse(localStorage.getItem('bobinesBibliotheque') || '[]');
-            const bobine = bobines[index];
-            
-            const container = document.querySelector(`[data-bobine="${bobineId}"]`);
-            container.querySelector('[data-field="nom"]').value = bobine.nom;
-            container.querySelector('[data-field="prix"]').value = bobine.prix;
-            container.querySelector('[data-field="poids-total"]').value = bobine.poids;
         }
 
         function supprimerBobine(id) {
@@ -969,216 +527,11 @@
             }
         }
 
-        // Gestion bibliothèque de bobines
-        function ouvrirGestionBobines() {
-            document.getElementById('modal-bobines').classList.add('show');
-            afficherBobinesEnregistrees();
-        }
-
-        function fermerGestionBobines() {
-            document.getElementById('modal-bobines').classList.remove('show');
-        }
-
-        function ajouterBobineBibliotheque() {
-            const nom = document.getElementById('nouvelle-bobine-nom').value.trim();
-            const prix = parseFloat(document.getElementById('nouvelle-bobine-prix').value);
-            const poids = parseFloat(document.getElementById('nouvelle-bobine-poids').value);
-            const type = document.getElementById('nouvelle-bobine-type').value;
-
-            if (!nom) {
-                alert('Veuillez entrer un nom pour la bobine.');
-                return;
-            }
-
-            const bobines = JSON.parse(localStorage.getItem('bobinesBibliotheque') || '[]');
-            bobines.push({ nom, prix, poids, type });
-            localStorage.setItem('bobinesBibliotheque', JSON.stringify(bobines));
-
-            // Réinitialiser le formulaire
-            document.getElementById('nouvelle-bobine-nom').value = '';
-            document.getElementById('nouvelle-bobine-prix').value = '20';
-            document.getElementById('nouvelle-bobine-poids').value = '1000';
-            document.getElementById('nouvelle-bobine-type').value = 'PLA';
-
-            afficherBobinesEnregistrees();
-            
-            // Mettre à jour tous les selects de bobines
-            document.querySelectorAll('[data-field="bobine-select"]').forEach(select => {
-                chargerListeBobines(select);
-            });
-        }
-
-        function afficherBobinesEnregistrees() {
-            const bobines = JSON.parse(localStorage.getItem('bobinesBibliotheque') || '[]');
-            const container = document.getElementById('liste-bobines-enregistrees');
-
-            if (bobines.length === 0) {
-                container.innerHTML = '<div class="empty-history"><p style="color: #808080;">Aucune bobine enregistrée</p></div>';
-                return;
-            }
-
-            const html = bobines.map((bobine, index) => `
-                <div class="history-item">
-                    <div class="history-item-header">
-                        <div class="history-item-title">${bobine.nom}</div>
-                        <button class="btn-delete-entry" onclick="supprimerBobineBibliotheque(${index})">🗑️ Supprimer</button>
-                    </div>
-                    <div class="history-item-details">
-                        <div class="history-detail">
-                            <span class="history-detail-label">Type</span>
-                            <span class="history-detail-value">${bobine.type}</span>
-                        </div>
-                        <div class="history-detail">
-                            <span class="history-detail-label">Prix</span>
-                            <span class="history-detail-value">${bobine.prix.toFixed(2)} €</span>
-                        </div>
-                        <div class="history-detail">
-                            <span class="history-detail-label">Poids</span>
-                            <span class="history-detail-value">${bobine.poids} g</span>
-                        </div>
-                        <div class="history-detail">
-                            <span class="history-detail-label">Prix au gramme</span>
-                            <span class="history-detail-value">${(bobine.prix / bobine.poids).toFixed(4)} €/g</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-
-            container.innerHTML = html;
-        }
-
-        function supprimerBobineBibliotheque(index) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette bobine ?')) {
-                const bobines = JSON.parse(localStorage.getItem('bobinesBibliotheque') || '[]');
-                bobines.splice(index, 1);
-                localStorage.setItem('bobinesBibliotheque', JSON.stringify(bobines));
-                afficherBobinesEnregistrees();
-                
-                // Mettre à jour tous les selects
-                document.querySelectorAll('[data-field="bobine-select"]').forEach(select => {
-                    chargerListeBobines(select);
-                });
-            }
-        }
-
-        // Gestion des imprimantes
-        function initialiserImprimantesParDefaut() {
-            const imprimantes = JSON.parse(localStorage.getItem('imprimantesBibliotheque') || '[]');
-            
-            if (imprimantes.length === 0) {
-                // Ajouter quelques imprimantes par défaut
-                const imprimantesDefaut = [
-                    { nom: 'Anycubic Cobra S1 Combo', puissance: 1500 },
-                    { nom: 'Creality Ender 3 V2', puissance: 360 },
-                    { nom: 'Prusa i3 MK3S+', puissance: 120 },
-                    { nom: 'Bambu Lab X1 Carbon', puissance: 350 },
-                    { nom: 'Artillery Sidewinder X2', puissance: 500 }
-                ];
-                localStorage.setItem('imprimantesBibliotheque', JSON.stringify(imprimantesDefaut));
-            }
-        }
-
-        function chargerListeImprimantes() {
-            const imprimantes = JSON.parse(localStorage.getItem('imprimantesBibliotheque') || '[]');
-            const select = document.getElementById('imprimante-select');
-            
-            select.innerHTML = '<option value="">Sélectionner une imprimante...</option>';
-            
-            imprimantes.forEach((imprimante, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = `${imprimante.nom} (${imprimante.puissance}W)`;
-                select.appendChild(option);
-            });
-        }
-
-        function chargerImprimante() {
-            const select = document.getElementById('imprimante-select');
-            const index = select.value;
-            
-            if (index === '') return;
-            
-            const imprimantes = JSON.parse(localStorage.getItem('imprimantesBibliotheque') || '[]');
-            const imprimante = imprimantes[index];
-            
-            document.getElementById('elec-puissance').value = imprimante.puissance;
-        }
-
-        function ouvrirGestionImprimantes() {
-            document.getElementById('modal-imprimantes').classList.add('show');
-            afficherImprimantesEnregistrees();
-        }
-
-        function fermerGestionImprimantes() {
-            document.getElementById('modal-imprimantes').classList.remove('show');
-        }
-
-        function ajouterImprimanteBibliotheque() {
-            const nom = document.getElementById('nouvelle-imprimante-nom').value.trim();
-            const puissance = parseFloat(document.getElementById('nouvelle-imprimante-puissance').value);
-
-            if (!nom) {
-                alert('Veuillez entrer un nom pour l\'imprimante.');
-                return;
-            }
-
-            const imprimantes = JSON.parse(localStorage.getItem('imprimantesBibliotheque') || '[]');
-            imprimantes.push({ nom, puissance });
-            localStorage.setItem('imprimantesBibliotheque', JSON.stringify(imprimantes));
-
-            // Réinitialiser le formulaire
-            document.getElementById('nouvelle-imprimante-nom').value = '';
-            document.getElementById('nouvelle-imprimante-puissance').value = '150';
-
-            afficherImprimantesEnregistrees();
-            chargerListeImprimantes();
-        }
-
-        function afficherImprimantesEnregistrees() {
-            const imprimantes = JSON.parse(localStorage.getItem('imprimantesBibliotheque') || '[]');
-            const container = document.getElementById('liste-imprimantes-enregistrees');
-
-            if (imprimantes.length === 0) {
-                container.innerHTML = '<div class="empty-history"><p style="color: #808080;">Aucune imprimante enregistrée</p></div>';
-                return;
-            }
-
-            const html = imprimantes.map((imprimante, index) => `
-                <div class="history-item">
-                    <div class="history-item-header">
-                        <div class="history-item-title">${imprimante.nom}</div>
-                        <button class="btn-delete-entry" onclick="supprimerImprimanteBibliotheque(${index})">🗑️ Supprimer</button>
-                    </div>
-                    <div class="history-item-details">
-                        <div class="history-detail">
-                            <span class="history-detail-label">Puissance</span>
-                            <span class="history-detail-value">${imprimante.puissance} W</span>
-                        </div>
-                        <div class="history-detail">
-                            <span class="history-detail-label">Consommation/h (0,25€/kWh)</span>
-                            <span class="history-detail-value">${((imprimante.puissance / 1000) * 0.25).toFixed(3)} €</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-
-            container.innerHTML = html;
-        }
-
-        function supprimerImprimanteBibliotheque(index) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette imprimante ?')) {
-                const imprimantes = JSON.parse(localStorage.getItem('imprimantesBibliotheque') || '[]');
-                imprimantes.splice(index, 1);
-                localStorage.setItem('imprimantesBibliotheque', JSON.stringify(imprimantes));
-                afficherImprimantesEnregistrees();
-                chargerListeImprimantes();
-            }
-        }
-
         // Calculs
         function calculer() {
             const quantite = parseFloat(document.getElementById('piece-quantite').value) || 1;
             
+            // Coût matière
             let coutMatiere = 0;
             document.querySelectorAll('.bobine-item').forEach(bobine => {
                 const prix = parseFloat(bobine.querySelector('[data-field="prix"]').value) || 0;
@@ -1187,6 +540,7 @@
                 coutMatiere += (prix / poidsTotal) * poidsUtilise;
             });
 
+            // Coût électrique
             const prixKwh = parseFloat(document.getElementById('elec-kwh').value) || 0;
             const puissance = parseFloat(document.getElementById('elec-puissance').value) || 0;
             const temps = parseFloat(document.getElementById('elec-temps').value) || 0;
@@ -1194,24 +548,15 @@
 
             let html = '';
             let prixVente = 0;
-            let coutTotal = 0;
 
             if (modeActuel === 'occasionnel') {
-                coutTotal = (coutMatiere + coutElec) * quantite;
+                // Mode occasionnel
+                const coutTotal = (coutMatiere + coutElec) * quantite;
                 const marge = parseFloat(document.getElementById('marge-simple').value) || 0;
                 prixVente = coutTotal * (1 + marge / 100);
+                
+                // Arrondi type Vinted (au 0.50 ou entier supérieur)
                 prixVente = Math.ceil(prixVente * 2) / 2;
-
-                derniersResultats = {
-                    mode: 'occasionnel',
-                    nom: document.getElementById('piece-nom').value || 'Pièce sans nom',
-                    quantite: quantite,
-                    coutMatiere: coutMatiere,
-                    coutElec: coutElec,
-                    coutTotal: coutTotal,
-                    prixVente: prixVente,
-                    date: new Date().toISOString()
-                };
 
                 html = `
                     <div class="result-item">
@@ -1236,7 +581,7 @@
                     </div>
                     <div class="result-item">
                         <span class="result-label">Marge appliquée</span>
-                        <span class="result-value">${parseFloat(document.getElementById('marge-simple').value) || 0}%</span>
+                        <span class="result-value">${marge}%</span>
                     </div>
                     <div class="result-total">
                         <div class="result-item">
@@ -1245,3 +590,218 @@
                         </div>
                     </div>
                 `;
+            } else {
+                // Mode pro
+                const prixMachine = parseFloat(document.getElementById('machine-prix').value) || 0;
+                const dureeMachine = parseFloat(document.getElementById('machine-duree').value) || 1;
+                const heuresMachine = parseFloat(document.getElementById('machine-heures').value) || 1;
+                const coutMachine = (prixMachine / (dureeMachine * heuresMachine)) * temps;
+
+                const tauxMO = parseFloat(document.getElementById('mo-taux').value) || 0;
+                const tempsMO = parseFloat(document.getElementById('mo-temps').value) || 0;
+                const coutMO = tauxMO * tempsMO;
+
+                const coutTotalHT = (coutMatiere + coutElec + coutMachine + coutMO) * quantite;
+                
+                const charges = parseFloat(document.getElementById('charges').value) || 0;
+                const margeNette = parseFloat(document.getElementById('marge-nette').value) || 0;
+                
+                const coutAvecCharges = coutTotalHT * (1 + charges / 100);
+                const prixVenteHT = coutAvecCharges * (1 + margeNette / 100);
+                
+                const tva = parseFloat(document.getElementById('tva').value) || 0;
+                const prixVenteTTC = prixVenteHT * (1 + tva / 100);
+                const montantTVA = prixVenteTTC - prixVenteHT;
+
+                html = `
+                    <div class="result-item">
+                        <span class="result-label">Coût matière</span>
+                        <span class="result-value">${coutMatiere.toFixed(2)} €</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Coût électrique</span>
+                        <span class="result-value">${coutElec.toFixed(2)} €</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Amortissement machine</span>
+                        <span class="result-value">${coutMachine.toFixed(2)} €</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Main-d'œuvre</span>
+                        <span class="result-value">${coutMO.toFixed(2)} €</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Quantité</span>
+                        <span class="result-value">× ${quantite}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Coût total HT</span>
+                        <span class="result-value">${coutTotalHT.toFixed(2)} €</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Charges (${charges}%)</span>
+                        <span class="result-value">${(coutAvecCharges - coutTotalHT).toFixed(2)} €</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Marge nette (${margeNette}%)</span>
+                        <span class="result-value">${(prixVenteHT - coutAvecCharges).toFixed(2)} €</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Prix de vente HT</span>
+                        <span class="result-value">${prixVenteHT.toFixed(2)} €</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">TVA (${tva}%)</span>
+                        <span class="result-value">${montantTVA.toFixed(2)} €</span>
+                    </div>
+                    <div class="result-total">
+                        <div class="result-item">
+                            <span class="result-label">💰 Prix de vente TTC</span>
+                            <span class="result-value">${prixVenteTTC.toFixed(2)} €</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('details-calculs').innerHTML = html;
+            document.getElementById('resultats').classList.add('show');
+            
+            // Scroll vers les résultats
+            document.getElementById('resultats').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            sauvegarderDonnees();
+        }
+
+        function reinitialiser() {
+            if (confirm('Êtes-vous sûr de vouloir réinitialiser tous les champs ?')) {
+                // Réinitialiser les champs
+                document.getElementById('piece-nom').value = '';
+                document.getElementById('piece-quantite').value = '1';
+                document.getElementById('elec-kwh').value = '0.25';
+                document.getElementById('elec-puissance').value = '150';
+                document.getElementById('elec-temps').value = '5';
+                
+                if (modeActuel === 'occasionnel') {
+                    document.getElementById('marge-simple').value = '30';
+                } else {
+                    document.getElementById('machine-prix').value = '500';
+                    document.getElementById('machine-duree').value = '3';
+                    document.getElementById('machine-heures').value = '1000';
+                    document.getElementById('mo-taux').value = '15';
+                    document.getElementById('mo-temps').value = '0.5';
+                    document.getElementById('tva').value = '20';
+                    document.getElementById('charges').value = '10';
+                    document.getElementById('marge-nette').value = '25';
+                }
+                
+                // Réinitialiser les bobines
+                document.getElementById('bobines-container').innerHTML = '';
+                bobineCounter = 0;
+                ajouterBobine();
+                
+                // Masquer les résultats
+                document.getElementById('resultats').classList.remove('show');
+                
+                sauvegarderDonnees();
+            }
+        }
+
+        // Sauvegarde et chargement
+        function sauvegarderDonnees() {
+            const data = {
+                mode: modeActuel,
+                pieceNom: document.getElementById('piece-nom').value,
+                pieceQuantite: document.getElementById('piece-quantite').value,
+                elecKwh: document.getElementById('elec-kwh').value,
+                elecPuissance: document.getElementById('elec-puissance').value,
+                elecTemps: document.getElementById('elec-temps').value,
+                bobines: []
+            };
+
+            // Sauvegarder les bobines
+            document.querySelectorAll('.bobine-item').forEach(bobine => {
+                data.bobines.push({
+                    nom: bobine.querySelector('[data-field="nom"]').value,
+                    prix: bobine.querySelector('[data-field="prix"]').value,
+                    poidsTotal: bobine.querySelector('[data-field="poids-total"]').value,
+                    poidsUtilise: bobine.querySelector('[data-field="poids-utilise"]').value
+                });
+            });
+
+            // Sauvegarder les paramètres spécifiques
+            if (modeActuel === 'occasionnel') {
+                data.margeSimple = document.getElementById('marge-simple').value;
+            } else {
+                data.machinePrix = document.getElementById('machine-prix').value;
+                data.machineDuree = document.getElementById('machine-duree').value;
+                data.machineHeures = document.getElementById('machine-heures').value;
+                data.moTaux = document.getElementById('mo-taux').value;
+                data.moTemps = document.getElementById('mo-temps').value;
+                data.tva = document.getElementById('tva').value;
+                data.charges = document.getElementById('charges').value;
+                data.margeNette = document.getElementById('marge-nette').value;
+            }
+
+            localStorage.setItem('calculateur3D', JSON.stringify(data));
+        }
+
+        function chargerDonnees() {
+            const saved = localStorage.getItem('calculateur3D');
+            if (!saved) return;
+
+            try {
+                const data = JSON.parse(saved);
+                
+                // Charger le mode
+                if (data.mode) {
+                    changerMode(data.mode);
+                }
+
+                // Charger les champs généraux
+                if (data.pieceNom) document.getElementById('piece-nom').value = data.pieceNom;
+                if (data.pieceQuantite) document.getElementById('piece-quantite').value = data.pieceQuantite;
+                if (data.elecKwh) document.getElementById('elec-kwh').value = data.elecKwh;
+                if (data.elecPuissance) document.getElementById('elec-puissance').value = data.elecPuissance;
+                if (data.elecTemps) document.getElementById('elec-temps').value = data.elecTemps;
+
+                // Charger les bobines
+                if (data.bobines && data.bobines.length > 0) {
+                    document.getElementById('bobines-container').innerHTML = '';
+                    bobineCounter = 0;
+                    data.bobines.forEach(bobine => {
+                        ajouterBobine();
+                        const derniereBobine = document.querySelector('.bobine-item:last-child');
+                        if (bobine.nom) derniereBobine.querySelector('[data-field="nom"]').value = bobine.nom;
+                        if (bobine.prix) derniereBobine.querySelector('[data-field="prix"]').value = bobine.prix;
+                        if (bobine.poidsTotal) derniereBobine.querySelector('[data-field="poids-total"]').value = bobine.poidsTotal;
+                        if (bobine.poidsUtilise) derniereBobine.querySelector('[data-field="poids-utilise"]').value = bobine.poidsUtilise;
+                    });
+                }
+
+                // Charger les paramètres spécifiques
+                if (data.mode === 'occasionnel' && data.margeSimple) {
+                    document.getElementById('marge-simple').value = data.margeSimple;
+                } else if (data.mode === 'pro') {
+                    if (data.machinePrix) document.getElementById('machine-prix').value = data.machinePrix;
+                    if (data.machineDuree) document.getElementById('machine-duree').value = data.machineDuree;
+                    if (data.machineHeures) document.getElementById('machine-heures').value = data.machineHeures;
+                    if (data.moTaux) document.getElementById('mo-taux').value = data.moTaux;
+                    if (data.moTemps) document.getElementById('mo-temps').value = data.moTemps;
+                    if (data.tva) document.getElementById('tva').value = data.tva;
+                    if (data.charges) document.getElementById('charges').value = data.charges;
+                    if (data.margeNette) document.getElementById('marge-nette').value = data.margeNette;
+                }
+            } catch (e) {
+                console.error('Erreur lors du chargement des données:', e);
+            }
+        }
+
+        // Sauvegarde automatique lors de la modification des champs
+        document.addEventListener('input', (e) => {
+            if (e.target.matches('input, select')) {
+                sauvegarderDonnees();
+            }
+        });
+    </script>
+</body>
+</html>
