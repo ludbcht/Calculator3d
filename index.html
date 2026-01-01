@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur Impression 3D</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui; background: linear-gradient(135deg, #1a1a2e, #16213e); color: #e4e4e4; min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { font-size: 2rem; color: #00d4ff; margin-bottom: 10px; }
+        .subtitle { color: #a0a0a0; font-size: 0.95rem; }
+        .mode-selector { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
+        .mode-btn { padding: 12px 30px; border: 2px solid #00d4ff; background: transparent; color: #00d4ff; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: all 0.3s; }
+        .mode-btn:hover { background: rgba(0, 212, 255, 0.1); }
+        .mode-btn.active { background: #00d4ff; color: #1a1a2e; }
+        .card { background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 25px; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .card h2 { color: #00d4ff; font-size: 1.4rem; margin-bottom: 20px; }
+        .form-group { margin-bottom: 18px; }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        label { display: block; margin-bottom: 6px; color: #b0b0b0; font-size: 0.9rem; font-weight: 500; }
+        input, select { width: 100%; padding: 10px 12px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 6px; color: #e4e4e4; font-size: 0.95rem; }
+        input:focus, select:focus { outline: none; border-color: #00d4ff; background: rgba(255, 255, 255, 0.12); }
+        .bobine-item { background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 15px; margin-top: 15px; }
+        .bobine-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .bobine-title { color: #00d4ff; font-weight: 600; }
+        .btn-remove { padding: 6px 12px; background: rgba(255, 59, 59, 0.2); border: 1px solid #ff3b3b; color: #ff3b3b; border-radius: 5px; cursor: pointer; font-size: 0.85rem; }
+        .btn-remove:hover { background: rgba(255, 59, 59, 0.4); }
+        .btn-add, .btn-manage { width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 0.95rem; font-weight: 600; margin-top: 10px; }
+        .btn-add { background: rgba(0, 212, 255, 0.1); border: 2px solid #00d4ff; color: #00d4ff; }
+        .btn-add:hover { background: rgba(0, 212, 255, 0.2); }
+        .btn-manage { background: rgba(157, 78, 221, 0.1); border: 2px solid #9d4edd; color: #9d4edd; }
+        .btn-manage:hover { background: rgba(157, 78, 221, 0.2); }
+        .action-buttons { display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap; }
+        .btn-primary, .btn-secondary, .btn-history { flex: 1; min-width: 150px; padding: 14px 25px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .btn-primary { background: linear-gradient(135deg, #00d4ff, #0099cc); color: #1a1a2e; }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.1); color: #e4e4e4; }
+        .btn-history { background: linear-gradient(135deg, #9d4edd, #7209b7); color: #ffffff; }
+        .btn-history:hover { transform: translateY(-2px); }
+        .results { display: none; }
+        .results.show { display: block; }
+        .result-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .result-label { color: #b0b0b0; }
+        .result-value { font-weight: 600; color: #e4e4e4; }
+        .result-total { background: rgba(0, 212, 255, 0.1); padding: 15px; border-radius: 8px; margin-top: 15px; }
+        .result-total .result-value { color: #00d4ff; font-size: 1.4rem; }
+        .pro-only { display: none; }
+        .pro-only.show { display: block; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 1000; overflow-y: auto; padding: 20px; }
+        .modal.show { display: flex; align-items: center; justify-content: center; }
+        .modal-content { background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 15px; padding: 30px; max-width: 1000px; width: 100%; max-height: 90vh; overflow-y: auto; border: 2px solid rgba(157, 78, 221, 0.5); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid rgba(157, 78, 221, 0.3); }
+        .modal-header h2 { color: #9d4edd; font-size: 1.8rem; }
+        .btn-close { background: rgba(255, 59, 59, 0.2); border: 1px solid #ff3b3b; color: #ff3b3b; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 1rem; font-weight: 600; }
+        .btn-export { background: rgba(0, 212, 255, 0.2); border: 1px solid #00d4ff; color: #00d4ff; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; margin: 0 10px 20px 0; display: inline-block; }
+        .period-filters { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .period-btn { padding: 8px 20px; background: rgba(157, 78, 221, 0.1); border: 1px solid rgba(157, 78, 221, 0.3); color: #9d4edd; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; }
+        .period-btn.active { background: #9d4edd; color: #ffffff; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: rgba(157, 78, 221, 0.1); border: 1px solid rgba(157, 78, 221, 0.3); border-radius: 10px; padding: 20px; text-align: center; }
+        .stat-label { color: #b0b0b0; font-size: 0.85rem; margin-bottom: 8px; }
+        .stat-value { color: #9d4edd; font-size: 1.8rem; font-weight: 700; }
+        .history-list { display: flex; flex-direction: column; gap: 15px; }
+        .history-item { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 20px; }
+        .history-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .history-item-title { color: #00d4ff; font-size: 1.2rem; font-weight: 600; }
+        .history-item-date { color: #808080; font-size: 0.85rem; }
+        .history-item-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 12px; }
+        .history-detail { display: flex; flex-direction: column; }
+        .history-detail-label { color: #808080; font-size: 0.8rem; margin-bottom: 3px; }
+        .history-detail-value { color: #e4e4e4; font-weight: 600; }
+        .empty-history { text-align: center; padding: 40px; color: #808080; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🖨️ Calculateur Impression 3D</h1>
+            <p class="subtitle">Calculez vos coûts et prix de vente</p>
+        </header>
+
+        <div class="mode-selector">
+            <button class="mode-btn active" data-mode="occasionnel">👤 Vendeur Occasionnel</button>
+            <button class="mode-btn" data-mode="pro">💼 Mode Pro</button>
+        </div>
+
+        <div class="card">
+            <h2>📦 Informations</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nom de la pièce</label>
+                    <input type="text" id="piece-nom">
+                </div>
+                <div class="form-group">
+                    <label>Quantité</label>
+                    <input type="number" id="piece-quantite" value="1" min="1">
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🎨 Filaments</h2>
+            <button class="btn-add" id="btn-add-bobine">+ Ajouter bobine</button>
+            <button class="btn-manage" id="btn-manage-bobines">📚 Gérer bobines</button>
+            <div id="bobines-container"></div>
+        </div>
+
+        <div class="card">
+            <h2>⚡ Électricité</h2>
+            <button class="btn-manage" id="btn-manage-printers">🖨️ Gérer imprimantes</button>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Imprimante</label>
+                    <select id="printer-select"><option value="">Sélectionner...</option></select>
+                </div>
+                <div class="form-group">
+                    <label>Prix kWh (€)</label>
+                    <input type="number" id="kwh-price" step="0.001" value="0.25">
+                </div>
+                <div class="form-group">
+                    <label>Puissance (W)</label>
+                    <input type="number" id="power" value="150">
+                </div>
+                <div class="form-group">
+                    <label>Temps (h)</label>
+                    <input type="number" id="print-time" step="0.1" value="5">
+                </div>
+            </div>
+        </div>
+
+        <div class="card occasionnel-only">
+            <h2>💰 Marge</h2>
+            <div class="form-group">
+                <label>Marge (%)</label>
+                <input type="number" id="marge-simple" value="30">
+            </div>
+        </div>
+
+        <div class="card pro-only">
+            <h2>🏭 Amortissement</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Prix machine (€)</label>
+                    <input type="number" id="machine-price" value="500">
+                </div>
+                <div class="form-group">
+                    <label>Durée (ans)</label>
+                    <input type="number" id="machine-years" value="3">
+                </div>
+                <div class="form-group">
+                    <label>Heures/an</label>
+                    <input type="number" id="machine-hours" value="1000">
+                </div>
+            </div>
+        </div>
+
+        <div class="card pro-only">
+            <h2>👨‍🔧 Main-d'œuvre</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Taux (€/h)</label>
+                    <input type="number" id="labor-rate" value="15">
+                </div>
+                <div class="form-group">
+                    <label>Temps (h)</label>
+                    <input type="number" id="labor-time" step="0.1" value="0.5">
+                </div>
+            </div>
+        </div>
+
+        <div class="card pro-only">
+            <h2>📊 TVA & Charges</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>TVA (%)</label>
+                    <input type="number" id="tva" value="20">
+                </div>
+                <div class="form-group">
+                    <label>Charges (%)</label>
+                    <input type="number" id="charges" value="10">
+                </div>
+                <div class="form-group">
+                    <label>Marge nette (%)</label>
+                    <input type="number" id="marge-net" value="25">
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-primary" id="btn-calculate">🧮 Calculer</button>
+            <button class="btn-history" id="btn-history">📊 Historique</button>
+            <button class="btn-history" id="btn-sales" style="background: linear-gradient(135deg, #10b981, #059669);">💰 Suivi Ventes</button>
+            <button class="btn-secondary" id="btn-reset">🔄 Réinitialiser</button>
+        </div>
+
+        <div class="card results" id="results">
+            <h2>📈 Résultats</h2>
+            <div id="results-content"></div>
+            <button class="btn-primary" id="btn-save-history" style="width:100%;margin-top:20px;">💾 Enregistrer</button>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-history">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📊 Historique</h2>
+                <button class="btn-close" id="close-history">✕</button>
+            </div>
+            <button class="btn-export" id="btn-export">📥 Export CSV</button>
+            <button class="btn-export" id="btn-export-pdf">📄 Export PDF</button>
+            <button class="btn-export" id="btn-clear" style="background:rgba(255,59,59,0.2);border-color:#ff3b3b;color:#ff3b3b;">🗑️ Effacer</button>
+            <div class="period-filters" id="period-filters"></div>
+            <div class="stats-grid" id="stats"></div>
+            <div class="history-list" id="history-list"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-bobines">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📚 Gestion Bobines</h2>
+                <button class="btn-close" id="close-bobines">✕</button>
+            </div>
+            <h3 style="color:#00d4ff;margin-bottom:15px;">Nouvelle bobine</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" id="new-bobine-name">
+                </div>
+                <div class="form-group">
+                    <label>Prix (€)</label>
+                    <input type="number" id="new-bobine-price" value="20">
+                </div>
+                <div class="form-group">
+                    <label>Poids (g)</label>
+                    <input type="number" id="new-bobine-weight" value="1000">
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select id="new-bobine-type">
+                        <option>PLA</option>
+                        <option>ABS</option>
+                        <option>PETG</option>
+                        <option>TPU</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn-primary" id="btn-add-bobine-lib" style="width:100%;">➕ Ajouter</button>
+            <hr style="border:1px solid rgba(255,255,255,0.1);margin:30px 0;">
+            <h3 style="color:#00d4ff;margin-bottom:15px;">Mes bobines</h3>
+            <div id="bobines-list"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-printers">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🖨️ Gestion Imprimantes</h2>
+                <button class="btn-close" id="close-printers">✕</button>
+            </div>
+            <h3 style="color:#00d4ff;margin-bottom:15px;">Nouvelle imprimante</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" id="new-printer-name">
+                </div>
+                <div class="form-group">
+                    <label>Puissance (W)</label>
+                    <input type="number" id="new-printer-power" value="150">
+                </div>
+            </div>
+            <button class="btn-primary" id="btn-add-printer-lib" style="width:100%;">➕ Ajouter</button>
+            <hr style="border:1px solid rgba(255,255,255,0.1);margin:30px 0;">
+            <h3 style="color:#00d4ff;margin-bottom:15px;">Mes imprimantes</h3>
+            <div id="printers-list"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-sales">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>💰 Suivi des Ventes</h2>
+                <button class="btn-close" id="close-sales">✕</button>
+            </div>
+            <button class="btn-export" id="btn-export-sales-csv">📥 Export CSV Ventes</button>
+            <button class="btn-export" id="btn-export-sales-pdf">📄 Export PDF Ventes</button>
+            <div class="period-filters" id="sales-period-filters"></div>
+            <div class="stats-grid" id="sales-stats"></div>
+            <div class="history-list" id="sales-list"></div>
+        </div>
+    </div>
+
+    <script>
+const App = {
+    mode: 'occasionnel',
+    bobineId: 0,
+    period: 'tout',
+    salesPeriod: 'tout',
+    lastResults: null
+};
+
+window.addEventListener('DOMContentLoaded', () => {
+    console.log('App chargée');
+    initPrinters();
+    loadPrinters();
+    addBobine();
+    setupEvents();
+    loadData();
+});
+
+function setupEvents() {
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.addEventListener('click', () => changeMode(btn.dataset.mode));
+    });
+    
+    document.getElementById('btn-add-bobine').addEventListener('click', addBobine);
+    document.getElementById('btn-manage-bobines').addEventListener('click', () => openModal('bobines'));
+    document.getElementById('btn-manage-printers').addEventListener('click', () => openModal('printers'));
+    document.getElementById('btn-calculate').addEventListener('click', calculate);
+    document.getElementById('btn-history').addEventListener('click', () => openModal('history'));
+    document.getElementById('btn-sales').addEventListener('click', () => openModal('sales'));
+    document.getElementById('btn-reset').addEventListener('click', reset);
+    document.getElementById('btn-save-history').addEventListener('click', saveToHistory);
+    
+    document.getElementById('close-history').addEventListener('click', () => closeModal('history'));
+    document.getElementById('close-bobines').addEventListener('click', () => closeModal('bobines'));
+    document.getElementById('close-printers').addEventListener('click', () => closeModal('printers'));
+    document.getElementById('close-sales').addEventListener('click', () => closeModal('sales'));
+    
+    document.getElementById('printer-select').addEventListener('change', loadPrinter);
+    document.getElementById('btn-add-bobine-lib').addEventListener('click', addBobineLib);
+    document.getElementById('btn-add-printer-lib').addEventListener('click', addPrinterLib);
+    document.getElementById('btn-export').addEventListener('click', exportCSV);
+    document.getElementById('btn-export-pdf').addEventListener('click', exportPDF);
+    document.getElementById('btn-clear').addEventListener('click', clearHistory);
+    document.getElementById('btn-export-sales-csv').addEventListener('click', exportSalesCSV);
+    document.getElementById('btn-export-sales-pdf').addEventListener('click', exportSalesPDF);
+    
+    document.querySelectorAll('.modal').forEach(m => {
+        m.addEventListener('click', e => {
+            if (e.target === m) closeModal(m.id.replace('modal-', ''));
+        });
+    });
+}
+
+function changeMode(mode) {
+    App.mode = mode;
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+    });
+    document.querySelectorAll('.pro-only').forEach(el => {
+        el.classList.toggle('show', mode === 'pro');
+    });
+    document.querySelectorAll('.occasionnel-only').forEach(el => {
+        el.style.display = mode === 'occasionnel' ? 'block' : 'none';
+    });
+    localStorage.setItem('mode', mode);
+    document.getElementById('results').classList.remove('show');
+}
+
+function addBobine() {
+    const id = ++App.bobineId;
+    const html = `
+        <div class="bobine-item" data-id="${id}">
+            <div class="bobine-header">
+                <span class="bobine-title">Bobine ${id}</span>
+                <button class="btn-remove" data-bobine-id="${id}">✕ Supprimer</button>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Bobine enregistrée</label>
+                    <select data-bobine-sel="${id}">
+                        <option value="">Nouvelle...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input data-bobine-name="${id}" placeholder="PLA Bleu">
+                </div>
+                <div class="form-group">
+                    <label>Prix (€)</label>
+                    <input type="number" data-bobine-price="${id}" value="20">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Poids total (g)</label>
+                    <input type="number" data-bobine-total="${id}" value="1000">
+                </div>
+                <div class="form-group">
+                    <label>Poids utilisé (g)</label>
+                    <input type="number" data-bobine-used="${id}" value="50">
+                </div>
+            </div>
+        </div>
+    `;
+    document.getElementById('bobines-container').insertAdjacentHTML('beforeend', html);
+    
+    const removeBtn = document.querySelector(`[data-bobine-id="${id}"]`);
+    removeBtn.addEventListener('click', () => removeBobine(id));
+    
+    const select = document.querySelector(`[data-bobine-sel="${id}"]`);
+    loadBobinesList(select);
+    select.addEventListener('change', () => selectBobine(select, id));
+}
+
+function removeBobine(id) {
+    if (document.querySelectorAll('.bobine-item').length > 1) {
+        document.querySelector(`.bobine-item[data-id="${id}"]`).remove();
+    } else {
+        alert('Gardez au moins une bobine');
+    }
+}
+
+function selectBobine(select, id) {
+    const idx = select.value;
+    if (!idx) return;
+    const libs = JSON.parse(localStorage.getItem('bobinesLib') || '[]');
+    const b = libs[idx];
+    document.querySelector(`[data-bobine-name="${id}"]`).value = b.nom;
+    document.querySelector(`[data-bobine-price="${id}"]`).value = b.prix;
+    document.querySelector(`[data-bobine-total="${id}"]`).value = b.poids;
+}
+
+function loadBobinesList(select) {
+    const libs = JSON.parse(localStorage.getItem('bobinesLib') || '[]');
+    select.innerHTML = '<option value="">Nouvelle...</option>';
+    libs.forEach((b, i) => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `${b.nom} - ${b.prix}€ (${b.poids}g)`;
+        select.appendChild(opt);
+    });
+}
+
+function openModal(name) {
+    document.getElementById(`modal-${name}`).classList.add('show');
+    if (name === 'bobines') showBobinesLib();
+    if (name === 'printers') showPrintersLib();
+    if (name === 'history') showHistory();
+    if (name === 'sales') showSales();
+}
+
+function closeModal(name) {
+    document.getElementById(`modal-${name}`).classList.remove('show');
+}
+
+function addBobineLib() {
+    const nom = document.getElementById('new-bobine-name').value.trim();
+    const prix = parseFloat(document.getElementById('new-bobine-price').value);
+    const poids = parseFloat(document.getElementById('new-bobine-weight').value);
+    const type = document.getElementById('new-bobine-type').value;
+    
+    if (!nom) {
+        alert('Nom requis');
+        return;
+    }
+    
+    const libs = JSON.parse(localStorage.getItem('bobinesLib') || '[]');
+    libs.push({ nom, prix, poids, type });
+    localStorage.setItem('bobinesLib', JSON.stringify(libs));
+    
+    document.getElementById('new-bobine-name').value = '';
+    document.getElementById('new-bobine-price').value = '20';
+    document.getElementById('new-bobine-weight').value = '1000';
+    
+    showBobinesLib();
+    document.querySelectorAll('[data-bobine-sel]').forEach(sel => loadBobinesList(sel));
+}
+
+function showBobinesLib() {
+    const libs = JSON.parse(localStorage.getItem('bobinesLib') || '[]');
+    const cont = document.getElementById('bobines-list');
+    
+    if (libs.length === 0) {
+        cont.innerHTML = '<div class="empty-history">Aucune bobine enregistrée</div>';
+        return;
+    }
+    
+    cont.innerHTML = libs.map((b, i) => `
+        <div class="history-item">
+            <div class="history-item-header">
+                <div class="history-item-title">${b.nom}</div>
+                <button class="btn-remove" onclick="deleteBobineLib(${i})">🗑️ Supprimer</button>
+            </div>
+            <div class="history-item-details">
+                <div class="history-detail">
+                    <span class="history-detail-label">Type</span>
+                    <span class="history-detail-value">${b.type}</span>
+                </div>
+                <div class="history-detail">
+                    <span class="history-detail-label">Prix</span>
+                    <span class="history-detail-value">${b.prix.toFixed(2)} €</span>
+                </div>
+                <div class="history-detail">
+                    <span class="history-detail-label">Poids</span>
+                    <span class="history-detail-value">${b.poids} g</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function deleteBobineLib(i) {
+    if (confirm('Supprimer cette bobine ?')) {
+        const libs = JSON.parse(localStorage.getItem('bobinesLib') || '[]');
+        libs.splice(i, 1);
+        localStorage.setItem('bobinesLib', JSON.stringify(libs));
+        showBobinesLib();
+        document.querySelectorAll('[data-bobine-sel]').forEach(sel => loadBobinesList(sel));
+    }
+}
+
+function initPrinters() {
+    const libs = JSON.parse(localStorage.getItem('printersLib') || '[]');
+    if (libs.length === 0) {
+        const def = [
+            { nom: 'Anycubic Cobra S1 Combo', puissance: 1500 },
+            { nom: 'Creality Ender 3 V2', puissance: 360 },
+            { nom: 'Prusa i3 MK3S+', puissance: 120 },
+            { nom: 'Bambu Lab X1 Carbon', puissance: 350 }
+        ];
+        localStorage.setItem('printersLib', JSON.stringify(def));
+    }
+}
+
+function loadPrinters() {
+    const libs = JSON.parse(localStorage.getItem('printersLib') || '[]');
+    const select = document.getElementById('printer-select');
+    select.innerHTML = '<option value="">Sélectionner...</option>';
+    libs.forEach((p, i) => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `${p.nom} (${p.puissance}W)`;
+        select.appendChild(opt);
+    });
+}
+
+function loadPrinter() {
+    const select = document.getElementById('printer-select');
+    const idx = select.value;
+    if (!idx) return;
+    const libs = JSON.parse(localStorage.getItem('printersLib') || '[]');
+    const p = libs[idx];
+    document.getElementById('power').value = p.puissance;
+}
+
+function addPrinterLib() {
+    const nom = document.getElementById('new-printer-name').value.trim();
+    const puissance = parseFloat(document.getElementById('new-printer-power').value);
+    
+    if (!nom) {
+        alert('Nom requis');
+        return;
+    }
+    
+    const libs = JSON.parse(localStorage.getItem('printersLib') || '[]');
+    libs.push({ nom, puissance });
+    localStorage.setItem('printersLib', JSON.stringify(libs));
+    
+    document.getElementById('new-printer-name').value = '';
+    document.getElementById('new-printer-power').value = '150';
+    
+    showPrintersLib();
+    loadPrinters();
+}
+
+function showPrintersLib() {
+    const libs = JSON.parse(localStorage.getItem('printersLib') || '[]');
+    const cont = document.getElementById('printers-list');
+    
+    if (libs.length === 0) {
+        cont.innerHTML = '<div class="empty-history">Aucune imprimante</div>';
+        return;
+    }
+    
+    cont.innerHTML = libs.map((p, i) => `
+        <div class="history-item">
+            <div class="history-item-header">
+                <div class="history-item-title">${p.nom}</div>
+                <button class="btn-remove" onclick="deletePrinterLib(${i})">🗑️ Supprimer</button>
+            </div>
+            <div class="history-item-details">
+                <div class="history-detail">
+                    <span class="history-detail-label">Puissance</span>
+                    <span class="history-detail-value">${p.puissance} W</span>
+                </div>
+                <div class="history-detail">
+                    <span class="history-detail-label">Conso/h (0,25€/kWh)</span>
+                    <span class="history-detail-value">${((p.puissance / 1000) * 0.25).toFixed(3)} €</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function deletePrinterLib(i) {
+    if (confirm('Supprimer cette imprimante ?')) {
+        const libs = JSON.parse(localStorage.getItem('printersLib') || '[]');
+        libs.splice(i, 1);
+        localStorage.setItem('printersLib', JSON.stringify(libs));
+        showPrintersLib();
+        loadPrinters();
+    }
+}
+
+function calculate() {
+    const qty = parseFloat(document.getElementById('piece-quantite').value) || 1;
+    let matCost = 0;
+    
+    document.querySelectorAll('.bobine-item').forEach(b => {
+        const id = b.dataset.id;
+        const price = parseFloat(document.querySelector(`[data-bobine-price="${id}"]`).value) || 0;
+        const total = parseFloat(document.querySelector(`[data-bobine-total="${id}"]`).value) || 1;
+        const used = parseFloat(document.querySelector(`[data-bobine-used="${id}"]`).value) || 0;
+        matCost += (price / total) * used;
+    });
+    
+    const kwhPrice = parseFloat(document.getElementById('kwh-price').value) || 0;
+    const power = parseFloat(document.getElementById('power').value) || 0;
+    const time = parseFloat(document.getElementById('print-time').value) || 0;
+    const elecCost = (power / 1000) * time * kwhPrice;
+    
+    let html = '';
+    let sellPrice = 0;
+    
+    if (App.mode === 'occasionnel') {
+        const totalCost = (matCost + elecCost) * qty;
+        const marge = parseFloat(document.getElementById('marge-simple').value) || 0;
+        sellPrice = totalCost * (1 + marge / 100);
+        sellPrice = Math.ceil(sellPrice * 2) / 2;
+        
+        App.lastResults = {
+            mode: 'occasionnel',
+            nom: document.getElementById('piece-nom').value || 'Pièce',
+            quantite: qty,
+            coutMatiere: matCost,
+            coutElec: elecCost,
+            coutTotal: totalCost,
+            prixVente: sellPrice,
+            date: new Date().toISOString()
+        };
+        
+        html = `
+            <div class="result-item">
+                <span class="result-label">Coût matière</span>
+                <span class="result-value">${matCost.toFixed(2)} €</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Coût électrique</span>
+                <span class="result-value">${elecCost.toFixed(2)} €</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Coût unitaire</span>
+                <span class="result-value">${(matCost + elecCost).toFixed(2)} €</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Quantité</span>
+                <span class="result-value">× ${qty}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Coût total</span>
+                <span class="result-value">${totalCost.toFixed(2)} €</span>
+            </div>
+            <div class="result-total">
+                <div class="result-item">
+                    <span class="result-label">💰 Prix de vente</span>
+                    <span class="result-value">${sellPrice.toFixed(2)} €</span>
+                </div>
+            </div>
+        `;
+    } else {
+        const machPrice = parseFloat(document.getElementById('machine-price').value) || 0;
+        const machYears = parseFloat(document.getElementById('machine-years').value) || 1;
+        const machHours = parseFloat(document.getElementById('machine-hours').value) || 1;
+        const machCost = (machPrice / (machYears * machHours)) * time;
+        
+        const laborRate = parseFloat(document.getElementById('labor-rate').value) || 0;
+        const laborTime = parseFloat(document.getElementById('labor-time').value) || 0;
+        const laborCost = laborRate * laborTime;
+        
+        const totalHT = (matCost + elecCost + machCost + laborCost) * qty;
+        const charges = parseFloat(document.getElementById('charges').value) || 0;
+        const margeNet = parseFloat(document.getElementById('marge-net').value) || 0;
+        const withCharges = totalHT * (1 + charges / 100);
+        const sellHT = withCharges * (1 + margeNet / 100);
+        const tva = parseFloat(document.getElementById('tva').value) || 0;
+        const sellTTC = sellHT * (1 + tva / 100);
+        const tvaAmount = sellTTC - sellHT;
+        
+        App.lastResults = {
+            mode: 'pro',
+            nom: document.getElementById('piece-nom').value || 'Pièce',
+            quantite: qty,
+            coutMatiere: matCost,
+            coutElec: elecCost,
+            coutMachine: machCost,
+            coutMO: laborCost,
+            coutTotal: totalHT,
+            prixVenteHT: sellHT,
+            prixVenteTTC: sellTTC,
+            tva: tvaAmount,
+            date: new Date().toISOString()
+        };
+        
+        html = `
+            <div class="result-item">
+                <span class="result-label">Coût matière</span>
+                <span class="result-value">${matCost.toFixed(2)} €</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Coût électrique</span>
+                <span class="result-value">${elecCost.toFixed(2)} €</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Amortissement</span>
+                <span class="result-value">${machCost.toFixed(2)} €</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Main-d'œuvre</span>
+                <span class="result-value">${laborCost.toFixed(2)} €</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Quantité</span>
+                <span class="result-value">× ${qty}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Coût total HT</span>
+                <span class="result-value">${totalHT.toFixed(2)} €</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Prix HT</span>
+                <span class="result-value">${sellHT.toFixed(2)} €</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">TVA</span>
+                <span class="result-value">${tvaAmount.toFixed(2)} €</span>
+            </div>
+            <div class="result-total">
+                <div class="result-item">
+                    <span class="result-label">💰 Prix TTC</span>
+                    <span class="result-value">${sellTTC.toFixed(2)} €</span>
+                </div>
+            </div>
+        `;
+    }
+    
+    document.getElementById('results-content').innerHTML = html;
+    document.getElementById('results').classList.add('show');
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function reset() {
+    if (confirm('Réinitialiser tous les champs ?')) {
+        document.getElementById('piece-nom').value = '';
+        document.getElementById('piece-quantite').value = '1';
+        document.getElementById('kwh-price').value = '0.25';
+        document.getElementById('power').value = '150';
+        document.getElementById('print-time').value = '5';
+        
+        if (App.mode === 'occasionnel') {
+            document.getElementById('marge-simple').value = '30';
+        } else {
+            document.getElementById('machine-price').value = '500';
+            document.getElementById('machine-years').value = '3';
+            document.getElementById('machine-hours').value = '1000';
+            document.getElementById('labor-rate').value = '15';
+            document.getElementById('labor-time').value = '0.5';
+            document.getElementById('tva').value = '20';
+            document.getElementById('charges').value = '10';
+            document.getElementById('marge-net').value = '25';
+        }
+        
+        document.getElementById('bobines-container').innerHTML = '';
+        App.bobineId = 0;
+        addBobine();
+        document.getElementById('results').classList.remove('show');
+    }
+}
+
+function saveToHistory() {
+    if (!App.lastResults) {
+        alert('Calculez d\'abord les résultats');
+        return;
+    }
+    let hist = JSON.parse(localStorage.getItem('history') || '[]');
+    hist.push(App.lastResults);
+    localStorage.setItem('history', JSON.stringify(hist));
+    alert('✅ Enregistré dans l\'historique !');
+}
+
+function showHistory() {
+    const hist = JSON.parse(localStorage.getItem('history') || '[]');
+    const now = new Date();
+    
+    let filtered = hist.filter(item => {
+        const d = new Date(item.date);
+        switch (App.period) {
+            case 'jour': return d.toDateString() === now.toDateString();
+            case 'semaine':
+                const week = new Date(now);
+                week.setDate(now.getDate() - 7);
+                return d >= week;
+            case 'mois': return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+            case 'annee': return d.getFullYear() === now.getFullYear();
+            default: return true;
+        }
+    });
+    
+    let totalPieces = 0, totalCost = 0, totalSell = 0;
+    filtered.forEach(i => {
+        totalPieces += i.quantite || 1;
+        totalCost += i.coutTotal || 0;
+        totalSell += (i.prixVente || i.prixVenteTTC || 0);
+    });
+    const profit = totalSell - totalCost;
+    
+    const statsHTML = `
+        <div class="stat-card">
+            <div class="stat-label">Pièces produites</div>
+            <div class="stat-value">${totalPieces}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Coût total</div>
+            <div class="stat-value">${totalCost.toFixed(2)} €</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Ventes totales</div>
+            <div class="stat-value">${totalSell.toFixed(2)} €</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Bénéfice</div>
+            <div class="stat-value" style="color:${profit >= 0 ? '#00d4ff' : '#ff3b3b'}">${profit.toFixed(2)} €</div>
+        </div>
+    `;
+    document.getElementById('stats').innerHTML = statsHTML;
+    
+    const periods = { tout: 'Tout', jour: 'Aujourd\'hui', semaine: 'Semaine', mois: 'Mois', annee: 'Année' };
+    const periodsHTML = Object.keys(periods).map(p => 
+        `<button class="period-btn ${p === App.period ? 'active' : ''}" onclick="filterPeriod('${p}')">${periods[p]}</button>`
+    ).join('');
+    document.getElementById('period-filters').innerHTML = periodsHTML;
+    
+    const listHTML = filtered.length > 0 ? filtered.reverse().map((item, idx) => {
+        const d = new Date(item.date);
+        const dateStr = d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        return `
+            <div class="history-item">
+                <div class="history-item-header">
+                    <div class="history-item-title">${item.nom}</div>
+                    <div class="history-item-date">${dateStr}</div>
+                </div>
+                <div class="history-item-details">
+                    <div class="history-detail">
+                        <span class="history-detail-label">Quantité</span>
+                        <span class="history-detail-value">${item.quantite}</span>
+                    </div>
+                    <div class="history-detail">
+                        <span class="history-detail-label">Coût matière</span>
+                        <span class="history-detail-value">${item.coutMatiere.toFixed(2)} €</span>
+                    </div>
+                    <div class="history-detail">
+                        <span class="history-detail-label">Coût élec</span>
+                        <span class="history-detail-value">${item.coutElec.toFixed(2)} €</span>
+                    </div>
+                    ${item.mode === 'pro' ? `
+                        <div class="history-detail">
+                            <span class="history-detail-label">Machine</span>
+                            <span class="history-detail-value">${item.coutMachine.toFixed(2)} €</span>
+                        </div>
+                        <div class="history-detail">
+                            <span class="history-detail-label">MO</span>
+                            <span class="history-detail-value">${item.coutMO.toFixed(2)} €</span>
+                        </div>
+                    ` : ''}
+                    <div class="history-detail">
+                        <span class="history-detail-label">Coût total</span>
+                        <span class="history-detail-value">${item.coutTotal.toFixed(2)} €</span>
+                    </div>
+                    <div class="history-detail">
+                        <span class="history-detail-label">Prix vente</span>
+                        <span class="history-detail-value" style="color:#00d4ff;font-size:1.1rem;">${(item.prixVente || item.prixVenteTTC).toFixed(2)} €</span>
+                    </div>
+                </div>
+                <button class="btn-remove" onclick="deleteHistoryItem(${hist.length - 1 - idx})" style="margin-top:10px;">🗑️ Supprimer</button>
+            </div>
+        `;
+    }).join('') : '<div class="empty-history">Aucune donnée pour cette période</div>';
+    
+    document.getElementById('history-list').innerHTML = listHTML;
+}
+
+function filterPeriod(p) {
+    App.period = p;
+    showHistory();
+}
+
+function deleteHistoryItem(i) {
+    if (confirm('Supprimer cette entrée ?')) {
+        let hist = JSON.parse(localStorage.getItem('history') || '[]');
+        hist.splice(i, 1);
+        localStorage.setItem('history', JSON.stringify(hist));
+        showHistory();
+    }
+}
+
+function clearHistory() {
+    if (confirm('⚠️ Effacer TOUT l\'historique ? Cette action est irréversible.')) {
+        localStorage.removeItem('history');
+        showHistory();
+    }
+}
+
+function exportCSV() {
+    const hist = JSON.parse(localStorage.getItem('history') || '[]');
+    if (hist.length === 0) {
+        alert('Aucune donnée à exporter');
+        return;
+    }
+    
+    let csv = 'Date,Nom,Quantité,Mode,Coût Matière,Coût Élec,Coût Machine,MO,Coût Total,Prix Vente\n';
+    hist.forEach(i => {
+        const d = new Date(i.date).toLocaleString('fr-FR');
+        csv += `"${d}","${i.nom}",${i.quantite},"${i.mode}",${i.coutMatiere.toFixed(2)},${i.coutElec.toFixed(2)},${(i.coutMachine || 0).toFixed(2)},${(i.coutMO || 0).toFixed(2)},${i.coutTotal.toFixed(2)},${(i.prixVente || i.prixVenteTTC).toFixed(2)}\n`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `historique_3d_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+}
+
+function exportPDF() {
+    const hist = JSON.parse(localStorage.getItem('history') || '[]');
+    if (hist.length === 0) {
+        alert('Aucune donnée à exporter');
+        return;
+    }
+    
+    const now = new Date();
+    let filtered = hist.filter(item => {
+        const d = new Date(item.date);
+        switch (App.period) {
+            case 'jour': return d.toDateString() === now.toDateString();
+            case 'semaine':
+                const week = new Date(now);
+                week.setDate(now.getDate() - 7);
+                return d >= week;
+            case 'mois': return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+            case 'annee': return d.getFullYear() === now.getFullYear();
+            default: return true;
+        }
+    });
+    
+    let totalPieces = 0, totalCost = 0, totalSell = 0;
+    filtered.forEach(i => {
+        totalPieces += i.quantite || 1;
+        totalCost += i.coutTotal || 0;
+        totalSell += (i.prixVente || i.prixVenteTTC || 0);
+    });
+    const profit = totalSell - totalCost;
+    
+    const periods = { tout: 'Complet', jour: 'Aujourd\'hui', semaine: 'Cette semaine', mois: 'Ce mois', annee: 'Cette année' };
+    
+    const pdfContent = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Relevé Production 3D</title>
+    <style>
+        @media print {
+            @page { margin: 20mm; }
+        }
+        body { font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 1200px; margin: 20px auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #00d4ff; }
+        .header h1 { color: #00d4ff; margin: 0; font-size: 28px; }
+        .header .subtitle { color: #666; font-size: 14px; margin-top: 5px; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
+        .stat-box { background: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #00d4ff; }
+        .stat-label { color: #666; font-size: 12px; margin-bottom: 5px; }
+        .stat-value { color: #00d4ff; font-size: 24px; font-weight: bold; }
+        .stat-box.profit .stat-value { color: ${profit >= 0 ? '#00d4ff' : '#ff3b3b'}; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #00d4ff; color: white; padding: 12px 8px; text-align: left; font-size: 12px; }
+        td { padding: 10px 8px; border-bottom: 1px solid #ddd; font-size: 11px; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .footer { margin-top: 30px; text-align: center; color: #999; font-size: 10px; padding-top: 20px; border-top: 1px solid #ddd; }
+        .mode-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
+        .mode-occasionnel { background: #e3f2fd; color: #1976d2; }
+        .mode-pro { background: #f3e5f5; color: #7b1fa2; }
+        .print-btn { 
+            background: #00d4ff; 
+            color: white; 
+            border: none; 
+            padding: 15px 30px; 
+            font-size: 16px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            margin: 20px auto; 
+            display: block;
+            font-weight: bold;
+        }
+        .print-btn:hover { background: #0099cc; }
+        @media print {
+            .print-btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">🖨️ Imprimer / Enregistrer en PDF</button>
+    <div class="header">
+        <h1>🖨️ Relevé de Production - Impression 3D</h1>
+        <div class="subtitle">Période : ${periods[App.period]} - Généré le ${new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}</div>
+    </div>
+    <div class="stats">
+        <div class="stat-box">
+            <div class="stat-label">Pièces produites</div>
+            <div class="stat-value">${totalPieces}</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Coût total</div>
+            <div class="stat-value">${totalCost.toFixed(2)} €</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Ventes totales</div>
+            <div class="stat-value">${totalSell.toFixed(2)} €</div>
+        </div>
+        <div class="stat-box profit">
+            <div class="stat-label">Bénéfice</div>
+            <div class="stat-value">${profit >= 0 ? '+' : ''}${profit.toFixed(2)} €</div>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Pièce</th>
+                <th>Qté</th>
+                <th>Mode</th>
+                <th>Matière</th>
+                <th>Élec</th>
+                <th>Machine</th>
+                <th>MO</th>
+                <th>Total</th>
+                <th>Vente</th>
+                <th>Marge</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${filtered.map(item => {
+                const d = new Date(item.date);
+                const dateStr = d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                const vente = item.prixVente || item.prixVenteTTC || 0;
+                const marge = vente - item.coutTotal;
+                return `<tr>
+                    <td>${dateStr}</td>
+                    <td><strong>${item.nom}</strong></td>
+                    <td>${item.quantite}</td>
+                    <td><span class="mode-badge mode-${item.mode}">${item.mode === 'pro' ? 'Pro' : 'Occas.'}</span></td>
+                    <td>${item.coutMatiere.toFixed(2)} €</td>
+                    <td>${item.coutElec.toFixed(2)} €</td>
+                    <td>${(item.coutMachine || 0).toFixed(2)} €</td>
+                    <td>${(item.coutMO || 0).toFixed(2)} €</td>
+                    <td><strong>${item.coutTotal.toFixed(2)} €</strong></td>
+                    <td><strong>${vente.toFixed(2)} €</strong></td>
+                    <td style="color:${marge >= 0 ? '#00d4ff' : '#ff3b3b'}"><strong>${marge >= 0 ? '+' : ''}${marge.toFixed(2)} €</strong></td>
+                </tr>`;
+            }).join('')}
+        </tbody>
+    </table>
+    <div class="footer">
+        Document généré par Calculateur Impression 3D - ${new Date().toLocaleString('fr-FR')}
+    </div>
+</body>
+</html>`;
+    
+    // Créer un blob et ouvrir dans un nouvel onglet
+    const blob = new Blob([pdfContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const newWindow = window.open(url, '_blank');
+    
+    // Si le popup est bloqué, proposer le téléchargement
+    if (!newWindow) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `releve_production_3d_${new Date().toISOString().split('T')[0]}.html`;
+        link.click();
+        URL.revokeObjectURL(url);
+        alert('📄 Le relevé a été téléchargé. Ouvrez-le et utilisez Ctrl+P (ou Cmd+P) pour l\'enregistrer en PDF.');
+    }
+}
+
+function loadData() {
+    const saved = localStorage.getItem('calculatorData');
+    if (!saved) return;
+    try {
+        const data = JSON.parse(saved);
+        if (data.mode) changeMode(data.mode);
+    } catch (e) {
+        console.error('Erreur chargement', e);
+    }
+}
+
+function saveData() {
+    const data = { mode: App.mode };
+    localStorage.setItem('calculatorData', JSON.stringify(data));
+}
+
+document.addEventListener('input', e => {
+    if (e.target.matches('input, select')) saveData();
+});
+
+// Suivi des ventes
+function showSales() {
+    const hist = JSON.parse(localStorage.getItem('history') || '[]');
+    const sales = JSON.parse(localStorage.getItem('sales') || '{}');
+    const now = new Date();
+    
+    let filtered = hist.filter(item => {
+        const d = new Date(item.date);
+        switch (App.salesPeriod) {
+            case 'jour': return d.toDateString() === now.toDateString();
+            case 'semaine':
+                const week = new Date(now);
+                week.setDate(now.getDate() - 7);
+                return d >= week;
+            case 'mois': return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+            case 'annee': return d.getFullYear() === now.getFullYear();
+            default: return true;
+        }
+    });
+    
+    let totalCost = 0, totalSalesReal = 0, totalPlusValue = 0, soldCount = 0;
+    filtered.forEach((item, idx) => {
+        const saleData = sales[hist.indexOf(item)];
+        totalCost += item.coutTotal || 0;
+        if (saleData && saleData.sold) {
+            soldCount++;
+            const realPrice = parseFloat(saleData.realPrice) || 0;
+            totalSalesReal += realPrice;
+            totalPlusValue += realPrice - (item.coutTotal || 0);
+        }
+    });
+    
+    const statsHTML = `
+        <div class="stat-card">
+            <div class="stat-label">Pièces vendues</div>
+            <div class="stat-value">${soldCount} / ${filtered.length}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Coût total</div>
+            <div class="stat-value">${totalCost.toFixed(2)} €</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Ventes réelles</div>
+            <div class="stat-value">${totalSalesReal.toFixed(2)} €</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Plus-value réelle</div>
+            <div class="stat-value" style="color:${totalPlusValue >= 0 ? '#10b981' : '#ff3b3b'}">${totalPlusValue >= 0 ? '+' : ''}${totalPlusValue.toFixed(2)} €</div>
+        </div>
+    `;
+    document.getElementById('sales-stats').innerHTML = statsHTML;
+    
+    const periods = { tout: 'Tout', jour: 'Aujourd\'hui', semaine: 'Semaine', mois: 'Mois', annee: 'Année' };
+    const periodsHTML = Object.keys(periods).map(p => 
+        `<button class="period-btn ${p === App.salesPeriod ? 'active' : ''}" onclick="filterSalesPeriod('${p}')">${periods[p]}</button>`
+    ).join('');
+    document.getElementById('sales-period-filters').innerHTML = periodsHTML;
+    
+    const listHTML = filtered.length > 0 ? filtered.map((item, idx) => {
+        const histIdx = hist.indexOf(item);
+        const saleData = sales[histIdx] || { sold: false, realPrice: 0, saleDate: null };
+        const d = new Date(item.date);
+        const dateStr = d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const estimatedPrice = item.prixVente || item.prixVenteTTC || 0;
+        const realPrice = parseFloat(saleData.realPrice) || 0;
+        const plusValue = realPrice - (item.coutTotal || 0);
+        const isSold = saleData.sold;
+        
+        return `
+            <div class="history-item" style="border-left: 4px solid ${isSold ? '#10b981' : '#808080'}">
+                <div class="history-item-header">
+                    <div class="history-item-title">${item.nom} ${isSold ? '✅' : '⏳'}</div>
+                    <div class="history-item-date">Produit le ${dateStr}</div>
+                </div>
+                <div class="history-item-details">
+                    <div class="history-detail">
+                        <span class="history-detail-label">Coût de production</span>
+                        <span class="history-detail-value">${item.coutTotal.toFixed(2)} €</span>
+                    </div>
+                    <div class="history-detail">
+                        <span class="history-detail-label">Prix conseillé</span>
+                        <span class="history-detail-value">${estimatedPrice.toFixed(2)} €</span>
+                    </div>
+                    <div class="history-detail">
+                        <span class="history-detail-label">Statut</span>
+                        <span class="history-detail-value">${isSold ? 'Vendu' : 'En stock'}</span>
+                    </div>
+                    ${isSold ? `
+                    <div class="history-detail">
+                        <span class="history-detail-label">Prix de vente réel</span>
+                        <span class="history-detail-value" style="color:#10b981;font-size:1.1rem;">${realPrice.toFixed(2)} €</span>
+                    </div>
+                    <div class="history-detail">
+                        <span class="history-detail-label">Plus-value</span>
+                        <span class="history-detail-value" style="color:${plusValue >= 0 ? '#10b981' : '#ff3b3b'};font-weight:bold;">${plusValue >= 0 ? '+' : ''}${plusValue.toFixed(2)} €</span>
+                    </div>
+                    ` : ''}
+                </div>
+                <div style="margin-top:15px;display:flex;gap:10px;flex-wrap:wrap;">
+                    ${!isSold ? `
+                        <input type="number" id="sale-price-${histIdx}" placeholder="Prix de vente réel" step="0.01" value="${realPrice || estimatedPrice.toFixed(2)}" style="flex:1;min-width:150px;">
+                        <button class="btn-primary" onclick="markAsSold(${histIdx})" style="padding:10px 20px;">✅ Marquer vendu</button>
+                    ` : `
+                        <button class="btn-secondary" onclick="markAsUnsold(${histIdx})" style="padding:10px 20px;">↩️ Remettre en stock</button>
+                        <button class="btn-secondary" onclick="editSale(${histIdx})" style="padding:10px 20px;">✏️ Modifier prix</button>
+                    `}
+                </div>
+            </div>
+        `;
+    }).join('') : '<div class="empty-history">Aucune pièce pour cette période</div>';
+    
+    document.getElementById('sales-list').innerHTML = listHTML;
+}
+
+function filterSalesPeriod(p) {
+    App.salesPeriod = p;
+    showSales();
+}
+
+function markAsSold(histIdx) {
+    const priceInput = document.getElementById(`sale-price-${histIdx}`);
+    const realPrice = parseFloat(priceInput.value);
+    
+    if (!realPrice || realPrice <= 0) {
+        alert('Veuillez entrer un prix de vente valide');
+        return;
+    }
+    
+    const sales = JSON.parse(localStorage.getItem('sales') || '{}');
+    sales[histIdx] = {
+        sold: true,
+        realPrice: realPrice,
+        saleDate: new Date().toISOString()
+    };
+    localStorage.setItem('sales', JSON.stringify(sales));
+    showSales();
+}
+
+function markAsUnsold(histIdx) {
+    if (confirm('Remettre cette pièce en stock ?')) {
+        const sales = JSON.parse(localStorage.getItem('sales') || '{}');
+        sales[histIdx] = { sold: false, realPrice: 0, saleDate: null };
+        localStorage.setItem('sales', JSON.stringify(sales));
+        showSales();
+    }
+}
+
+function editSale(histIdx) {
+    const sales = JSON.parse(localStorage.getItem('sales') || '{}');
+    const currentPrice = sales[histIdx]?.realPrice || 0;
+    const newPrice = prompt('Nouveau prix de vente réel:', currentPrice);
+    
+    if (newPrice !== null && !isNaN(parseFloat(newPrice))) {
+        sales[histIdx].realPrice = parseFloat(newPrice);
+        localStorage.setItem('sales', JSON.stringify(sales));
+        showSales();
+    }
+}
+
+function exportSalesCSV() {
+    const hist = JSON.parse(localStorage.getItem('history') || '[]');
+    const sales = JSON.parse(localStorage.getItem('sales') || '{}');
+    
+    if (hist.length === 0) {
+        alert('Aucune donnée');
+        return;
+    }
+    
+    let csv = 'Date Production,Pièce,Quantité,Coût,Prix Conseillé,Statut,Prix Réel,Plus-value,Date Vente\n';
+    hist.forEach((item, idx) => {
+        const saleData = sales[idx] || { sold: false, realPrice: 0 };
+        const d = new Date(item.date);
+        const estimatedPrice = item.prixVente || item.prixVenteTTC || 0;
+        const realPrice = parseFloat(saleData.realPrice) || 0;
+        const plusValue = realPrice - (item.coutTotal || 0);
+        const saleDate = saleData.saleDate ? new Date(saleData.saleDate).toLocaleDateString('fr-FR') : '';
+        
+        csv += `"${d.toLocaleDateString('fr-FR')}","${item.nom}",${item.quantite},${item.coutTotal.toFixed(2)},${estimatedPrice.toFixed(2)},"${saleData.sold ? 'Vendu' : 'En stock'}",${realPrice.toFixed(2)},${plusValue.toFixed(2)},"${saleDate}"\n`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `suivi_ventes_3d_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+}
+
+function exportSalesPDF() {
+    const hist = JSON.parse(localStorage.getItem('history') || '[]');
+    const sales = JSON.parse(localStorage.getItem('sales') || '{}');
+    
+    if (hist.length === 0) {
+        alert('Aucune donnée');
+        return;
+    }
+    
+    const now = new Date();
+    let filtered = hist.filter(item => {
+        const d = new Date(item.date);
+        switch (App.salesPeriod) {
+            case 'jour': return d.toDateString() === now.toDateString();
+            case 'semaine':
+                const week = new Date(now);
+                week.setDate(now.getDate() - 7);
+                return d >= week;
+            case 'mois': return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+            case 'annee': return d.getFullYear() === now.getFullYear();
+            default: return true;
+        }
+    });
+    
+    let totalCost = 0, totalSalesReal = 0, totalPlusValue = 0, soldCount = 0;
+    filtered.forEach((item, idx) => {
+        const saleData = sales[hist.indexOf(item)];
+        totalCost += item.coutTotal || 0;
+        if (saleData && saleData.sold) {
+            soldCount++;
+            const realPrice = parseFloat(saleData.realPrice) || 0;
+            totalSalesReal += realPrice;
+            totalPlusValue += realPrice - (item.coutTotal || 0);
+        }
+    });
+    
+    const periods = { tout: 'Complet', jour: 'Aujourd\'hui', semaine: 'Cette semaine', mois: 'Ce mois', annee: 'Cette année' };
+    
+    const pdfContent = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Suivi Ventes 3D</title>
+    <style>
+        @media print { @page { margin: 20mm; } }
+        body { font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 1200px; margin: 20px auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #10b981; }
+        .header h1 { color: #10b981; margin: 0; font-size: 28px; }
+        .header .subtitle { color: #666; font-size: 14px; margin-top: 5px; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
+        .stat-box { background: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #10b981; }
+        .stat-label { color: #666; font-size: 12px; margin-bottom: 5px; }
+        .stat-value { color: #10b981; font-size: 24px; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #10b981; color: white; padding: 12px 8px; text-align: left; font-size: 12px; }
+        td { padding: 10px 8px; border-bottom: 1px solid #ddd; font-size: 11px; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .footer { margin-top: 30px; text-align: center; color: #999; font-size: 10px; padding-top: 20px; border-top: 1px solid #ddd; }
+        .print-btn { background: #10b981; color: white; border: none; padding: 15px 30px; font-size: 16px; border-radius: 8px; cursor: pointer; margin: 20px auto; display: block; font-weight: bold; }
+        .print-btn:hover { background: #059669; }
+        @media print { .print-btn { display: none; } }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
+        .badge-sold { background: #d1fae5; color: #065f46; }
+        .badge-stock { background: #f3f4f6; color: #6b7280; }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">🖨️ Imprimer / Enregistrer en PDF</button>
+    <div class="header">
+        <h1>💰 Suivi des Ventes - Impression 3D</h1>
+        <div class="subtitle">Période : ${periods[App.salesPeriod]} - Généré le ${new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}</div>
+    </div>
+    <div class="stats">
+        <div class="stat-box">
+            <div class="stat-label">Pièces vendues</div>
+            <div class="stat-value">${soldCount} / ${filtered.length}</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Coût total</div>
+            <div class="stat-value">${totalCost.toFixed(2)} €</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Ventes réelles</div>
+            <div class="stat-value">${totalSalesReal.toFixed(2)} €</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Plus-value réelle</div>
+            <div class="stat-value" style="color:${totalPlusValue >= 0 ? '#10b981' : '#ff3b3b'}">${totalPlusValue >= 0 ? '+' : ''}${totalPlusValue.toFixed(2)} €</div>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Date Prod.</th>
+                <th>Pièce</th>
+                <th>Qté</th>
+                <th>Coût</th>
+                <th>Prix Conseillé</th>
+                <th>Statut</th>
+                <th>Prix Réel</th>
+                <th>Plus-value</th>
+                <th>Date Vente</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${filtered.map(item => {
+                const histIdx = hist.indexOf(item);
+                const saleData = sales[histIdx] || { sold: false, realPrice: 0 };
+                const d = new Date(item.date);
+                const dateStr = d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                const estimatedPrice = item.prixVente || item.prixVenteTTC || 0;
+                const realPrice = parseFloat(saleData.realPrice) || 0;
+                const plusValue = realPrice - (item.coutTotal || 0);
+                const saleDate = saleData.saleDate ? new Date(saleData.saleDate).toLocaleDateString('fr-FR') : '-';
+                
+                return `<tr>
+                    <td>${dateStr}</td>
+                    <td><strong>${item.nom}</strong></td>
+                    <td>${item.quantite}</td>
+                    <td>${item.coutTotal.toFixed(2)} €</td>
+                    <td>${estimatedPrice.toFixed(2)} €</td>
+                    <td><span class="badge ${saleData.sold ? 'badge-sold' : 'badge-stock'}">${saleData.sold ? 'Vendu' : 'Stock'}</span></td>
+                    <td><strong>${saleData.sold ? realPrice.toFixed(2) + ' €' : '-'}</strong></td>
+                    <td style="color:${plusValue >= 0 ? '#10b981' : '#ff3b3b'}"><strong>${saleData.sold ? (plusValue >= 0 ? '+' : '') + plusValue.toFixed(2) + ' €' : '-'}</strong></td>
+                    <td>${saleDate}</td>
+                </tr>`;
+            }).join('')}
+        </tbody>
+    </table>
+    <div class="footer">
+        Document généré par Calculateur Impression 3D - ${new Date().toLocaleString('fr-FR')}
+    </div>
+</body>
+</html>`;
+    
+    const blob = new Blob([pdfContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const newWindow = window.open(url, '_blank');
+    
+    if (!newWindow) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `suivi_ventes_3d_${new Date().toISOString().split('T')[0]}.html`;
+        link.click();
+        URL.revokeObjectURL(url);
+        alert('📄 Le relevé a été téléchargé.');
+    }
+}
+    </script>
+</body>
+</html>
