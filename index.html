@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculateur Impression 3D</title>
+    <title>Calculateur du coût des impressions 3D</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: system-ui; background: linear-gradient(135deg, #1a1a2e, #16213e); color: #e4e4e4; min-height: 100vh; padding: 20px; }
@@ -77,8 +77,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>🖨️ Calculateur Impression 3D</h1>
-            <p class="subtitle">Calculez vos coûts et prix de vente</p>
+            <h1>🖨️ Calculateur du coût des impressions 3D</h1>
+            <p class="subtitle">Calculez vos coûts de production, gérer vos bobines et suivez vos ventes</p>
         </header>
 
         <div class="mode-selector">
@@ -94,7 +94,7 @@
                     <input type="text" id="piece-nom">
                 </div>
                 <div class="form-group">
-                    <label>Quantité</label>
+                    <label>Quantité produite</label>
                     <input type="number" id="piece-quantite" value="1" min="1">
                 </div>
             </div>
@@ -109,7 +109,7 @@
 
         <div class="card">
             <h2>⚡ Électricité</h2>
-            <button class="btn-manage" id="btn-manage-printers">🖨️ Gérer imprimantes</button>
+            <button class="btn-manage" id="btn-manage-printers">🖨️ Gérer mes imprimantes</button>
             <div class="form-row">
                 <div class="form-group">
                     <label>Imprimante</label>
@@ -191,8 +191,8 @@
         <div class="action-buttons">
             <button class="btn-primary" id="btn-calculate">🧮 Calculer</button>
             <button class="btn-history" id="btn-history">📊 Historique</button>
-            <button class="btn-history" id="btn-sales" style="background: linear-gradient(135deg, #10b981, #059669);">💰 Suivi Ventes</button>
-            <button class="btn-history" id="btn-stock" style="background: linear-gradient(135deg, #f59e0b, #d97706);">📦 Stock Bobines</button>
+            <button class="btn-history" id="btn-sales" style="background: linear-gradient(135deg, #10b981, #059669);">💰 Suivi des ventes</button>
+            <button class="btn-history" id="btn-stock" style="background: linear-gradient(135deg, #f59e0b, #d97706);">📦 Mon stock de bobines</button>
             <button class="btn-secondary" id="btn-reset">🔄 Réinitialiser</button>
         </div>
 
@@ -209,8 +209,8 @@
                 <h2>📊 Historique</h2>
                 <button class="btn-close" id="close-history">✕</button>
             </div>
-            <button class="btn-export" id="btn-export">📥 Export CSV</button>
-            <button class="btn-export" id="btn-export-pdf">📄 Export PDF</button>
+            <button class="btn-export" id="btn-export">📥 Exporter en CSV</button>
+            <button class="btn-export" id="btn-export-pdf">📄 Exporter en PDF</button>
             <button class="btn-export" id="btn-clear" style="background:rgba(255,59,59,0.2);border-color:#ff3b3b;color:#ff3b3b;">🗑️ Effacer</button>
             <div class="period-filters" id="period-filters"></div>
             <div class="stats-grid" id="stats"></div>
@@ -221,7 +221,7 @@
     <div class="modal" id="modal-bobines">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>📚 Gestion Bobines</h2>
+                <h2>📚 Gestion des bobines</h2>
                 <button class="btn-close" id="close-bobines">✕</button>
             </div>
             <h3 style="color:#00d4ff;margin-bottom:15px;">Nouvelle bobine</h3>
@@ -258,7 +258,7 @@
     <div class="modal" id="modal-printers">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>🖨️ Gestion Imprimantes</h2>
+                <h2>🖨️ Gestion des imprimantes</h2>
                 <button class="btn-close" id="close-printers">✕</button>
             </div>
             <h3 style="color:#00d4ff;margin-bottom:15px;">Nouvelle imprimante</h3>
@@ -282,7 +282,7 @@
     <div class="modal" id="modal-stock">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>📦 Gestion du Stock de Bobines</h2>
+                <h2>📦 Gestion du stock de bobines</h2>
                 <button class="btn-close" id="close-stock">✕</button>
             </div>
             
@@ -369,8 +369,8 @@
                 <h2>💰 Suivi des Ventes</h2>
                 <button class="btn-close" id="close-sales">✕</button>
             </div>
-            <button class="btn-export" id="btn-export-sales-csv">📥 Export CSV Ventes</button>
-            <button class="btn-export" id="btn-export-sales-pdf">📄 Export PDF Ventes</button>
+            <button class="btn-export" id="btn-export-sales-csv">📥 Export CSV des ventes</button>
+            <button class="btn-export" id="btn-export-sales-pdf">📄 Export PDF des ventes</button>
             <div class="period-filters" id="sales-period-filters"></div>
             <div class="stats-grid" id="sales-stats"></div>
             <div class="history-list" id="sales-list"></div>
